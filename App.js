@@ -1,19 +1,11 @@
-import { StyleSheet, Text, View } from 'react-native';
-import LandingPage from './Screen/LandingPage';
+import * as React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import MainStack from './Screen/MainStack';
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <LandingPage/>
-    </View>
+    <NavigationContainer>
+      <MainStack />
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
