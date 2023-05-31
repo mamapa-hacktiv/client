@@ -1,7 +1,10 @@
-import { StyleSheet, Text, View, ImageBackground, Button, Alert } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, Button, Pressable } from 'react-native'
 import React from 'react'
+import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function LandingPage() {
+    const navigation = useNavigation();
     return (
         <ImageBackground
             source={{
@@ -15,19 +18,19 @@ export default function LandingPage() {
                 <View style={{ flex: 1 }}>
 
                 </View>
-                <View style={styles.overlay}>
+                <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,1)']}>
+                    <View style={{width : "80%"}}>
                     <View style={styles.textButton}>
-                        <Text style={styles.textHeaders}>Bingung pilih lauk makan? langsung aja buka,mam apa</Text>
+                        <Text style={styles.textHeaders}>Bingung pilih lauk makan? langsung aja buka,mam </Text>
                         <Text style={styles.textTitle}>Disini sudah ada fitur pencarian makanan pake AI lohh</Text>
                     </View>
                     <View style={styles.button}>
-                        <Button
-                            title="Get started"
-                            color={"#EF551D"}
-                            onPress={() => Alert.alert('Lanjut ke home')}
-                        />
+                        <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
+                            <Text style={styles.text}>Get started</Text>
+                        </Pressable>
                     </View>
-                </View>
+                    </View>
+                </LinearGradient>
             </View>
         </ImageBackground>
     );
@@ -42,19 +45,30 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     button: {
-        fontSize: 15,
-        marginTop: 40,
-        width: "75%",
-        marginLeft: 40,
-        marginRight: 100
+       marginBottom : 10
     },
     textButton: {
-        width: "85%",
-        marginLeft: 40
+        marginBottom : 50
     },
+    buttonn : {
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: "#EF551D",
+    },
+    text: {
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+      },
     overlay: {
         flex: 1,
-        backgroundColor: 'rgba(0.10, 0.20, 0.30, 0.40)',
+        alignItems : 'center'
     },
     textHeaders: {
         fontSize: 35,
