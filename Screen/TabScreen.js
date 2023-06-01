@@ -3,9 +3,9 @@ import React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomePage from './HomePage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import RecipesList from '../components/RecipesList';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClipboardList, faPlus } from '@fortawesome/free-solid-svg-icons';
+import FormAdd from './FormAdd';
 
 const Tab = createBottomTabNavigator();
 
@@ -43,19 +43,9 @@ export default function TabScreen() {
           ),
         }}
       />
-       <Tab.Screen
-        name="RecipeList"
-        component={RecipesList}
-        options={{
-            tabBarLabel: 'RecipesList',
-            tabBarIcon: ({ color, size }) => (
-                <FontAwesomeIcon icon={faClipboardList} color={color} size={size}/>
-            ),
-          }}
-      />
       <Tab.Screen
         name="FormAdd"
-        component={Notifications}
+        component={FormAdd}
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (
