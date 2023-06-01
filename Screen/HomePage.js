@@ -12,7 +12,8 @@ import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faMugSaucer } from '@fortawesome/free-solid-svg-icons/faMugSaucer'
+import { faBowlFood, faCookieBite, faIceCream, faMagnifyingGlass, faMugSaucer } from "@fortawesome/free-solid-svg-icons";
+import { useNavigation } from '@react-navigation/native';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const IMAGES = [
@@ -22,24 +23,29 @@ const IMAGES = [
 ];
 
 export default function HomePage() {
+    const navigation = useNavigation();
+    
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
-        <View style={{ flex: 1.5, height: 250 }}>
+        <View style={{ flex: 1.5, height: 250, zIndex : -1 }}>
           <Carousel
             data={IMAGES}
             renderItem={(item) => (
               <Image
-                key={item}
-                src={item}
-                style={{
+              key={item}
+              src={item}
+              style={{
                   height: "auto",
                   width: DEVICE_WIDTH,
                   resizeMode: "cover",
+                  position: "relative"
                 }}
-              />
-            )}
+                />
+                )}
           />
+                <Image style={{ position: "absolute", marginTop: 189, width: "100%" }} source={require('../assets/vector1.png')}/>
         </View>
         <View style={{ flex: 3 }}>
           <View style={styles.fixToText}>
@@ -47,8 +53,7 @@ export default function HomePage() {
               style={styles.button1}
               onPress={() => Alert.alert("Search page")}
             >
-              <Text style={styles.text1}>Search</Text>
-              <FontAwesomeIcon icon={faMugSaucer} size={40} color="white" />
+              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass}  size={15} style={{color: "#ffffff",}} /> Search</Text>
             </Pressable>
             <Pressable
               style={styles.button}
@@ -61,29 +66,34 @@ export default function HomePage() {
           <View style={styles.fixToText}>
             <Pressable
               style={styles.buttonCategory}
-              onPress={() => Alert.alert("Sarapan Per category")}
+              onPress={() => navigation.navigate('RecipesList')}
             >
+                <FontAwesomeIcon icon={faMugSaucer} size={30} style={{color: "#ffffff",}} />
               <Text style={styles.textCategory}>Breakfast</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Utama")}
             >
+                <FontAwesomeIcon icon={faBowlFood} size={30} style={{color: "#ffffff",}} />
               <Text style={styles.textCategory}>Lunch</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Dessert")}
             >
+                <FontAwesomeIcon icon={faIceCream} size={30} style={{color: "#ffffff",}} />
               <Text style={styles.textCategory}>Dessert</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Snack")}
             >
+                <FontAwesomeIcon icon={faCookieBite} size={30} style={{color: "#ffffff",}} />
               <Text style={styles.textCategory}>Snack</Text>
             </Pressable>
           </View>
+          
           <Text style={styles.textHeaders}>Resep Terbaru</Text>
           <View
             style={{
