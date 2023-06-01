@@ -11,6 +11,8 @@ import {
 import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
+import { faMugSaucer } from '@fortawesome/free-solid-svg-icons/faMugSaucer'
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const IMAGES = [
@@ -46,6 +48,7 @@ export default function HomePage() {
               onPress={() => Alert.alert("Search page")}
             >
               <Text style={styles.text1}>Search</Text>
+              <FontAwesomeIcon icon={faMugSaucer} size={40} color="white" />
             </Pressable>
             <Pressable
               style={styles.button}
