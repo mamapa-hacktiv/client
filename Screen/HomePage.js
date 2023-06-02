@@ -24,7 +24,6 @@ const IMAGES = [
 
 export default function HomePage() {
     const navigation = useNavigation();
-    
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -66,7 +65,7 @@ export default function HomePage() {
           <View style={styles.fixToText}>
             <Pressable
               style={styles.buttonCategory}
-              onPress={() => navigation.navigate('RecipesList')}
+              onPress={() => navigation.navigate('RecipeList')}
             >
                 <FontAwesomeIcon icon={faMugSaucer} size={30} style={{color: "#ffffff",}} />
               <Text style={styles.textCategory}>Breakfast</Text>

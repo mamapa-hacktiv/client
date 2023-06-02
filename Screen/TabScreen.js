@@ -3,27 +3,13 @@ import React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import HomePage from './HomePage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import RecipesList from '../components/RecipesList';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClipboardList, faPlus } from '@fortawesome/free-solid-svg-icons';
+import FormAdd from './FormAdd';
+import LoginForm from './LoginForm';
 
 const Tab = createBottomTabNavigator();
-
-function Profile() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Profile!</Text>
-      </View>
-    );
-  }
   
-  function Notifications() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Notifications!</Text>
-      </View>
-    );
-  }
 export default function TabScreen() {
   return (
     <Tab.Navigator
@@ -43,19 +29,9 @@ export default function TabScreen() {
           ),
         }}
       />
-       <Tab.Screen
-        name="RecipeList"
-        component={RecipesList}
-        options={{
-            tabBarLabel: 'RecipesList',
-            tabBarIcon: ({ color, size }) => (
-                <FontAwesomeIcon icon={faClipboardList} color={color} size={size}/>
-            ),
-          }}
-      />
       <Tab.Screen
         name="FormAdd"
-        component={Notifications}
+        component={FormAdd}
         options={{
           tabBarLabel: '',
           tabBarIcon: ({ color, size }) => (
@@ -65,8 +41,9 @@ export default function TabScreen() {
       />
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={LoginForm}
         options={{
+          headerShown : false,
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
             <MaterialCommunityIcons name="account" color={color} size={size} />
