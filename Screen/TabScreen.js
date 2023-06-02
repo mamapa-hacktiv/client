@@ -9,50 +9,52 @@ import FormAdd from './FormAdd';
 import LoginForm from './LoginForm';
 
 const Tab = createBottomTabNavigator();
-  
+
 export default function TabScreen() {
-  return (
-    <Tab.Navigator
-      initialRouteName="Home"
-      screenOptions={{
-        tabBarActiveTintColor: '#e91e63',
-      }}
-    >
-      <Tab.Screen
-        name="Landing"
-        component={HomePage}
-        options={{
-          headerShown : false,
-          tabBarLabel: 'Landing',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="home" color={color} size={size} />
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="FormAdd"
-        component={FormAdd}
-        options={{
-          tabBarLabel: '',
-          tabBarIcon: ({ color, size }) => (
-            <FontAwesomeIcon icon={faPlus} color={color} size={size}/>
-          ),
-        }}
-      />
-      <Tab.Screen
-        name="Profile"
-        component={LoginForm}
-        options={{
-          headerShown : false,
-          tabBarLabel: 'Profile',
-          tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name="account" color={color} size={size} />
-          ),
-        }}
-      />
-    </Tab.Navigator>
-  );
-  
+    return (
+        <Tab.Navigator
+            initialRouteName="HomeTab"
+            screenOptions={{
+                tabBarActiveTintColor: '#e91e63',
+            }}
+        >
+            <Tab.Screen
+                name="HomeTab"
+                component={HomePage}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'HomeTab',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size} />
+                        ),
+                    }}
+            />
+                       
+            <Tab.Screen
+                name="FormAdd"
+                component={FormAdd}
+                options={{
+                    tabBarLabel: '',
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesomeIcon icon={faPlus} color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profile"
+                component={LoginForm}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+
+    );
+
 }
 
 const styles = StyleSheet.create({})

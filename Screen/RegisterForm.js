@@ -1,11 +1,10 @@
-
 import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image } from 'react-native'
 import React from 'react'
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/core';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TextInput } from 'react-native-paper';
 
-export default function LoginForm() {
+export default function RegisterForm() {
     const navigation = useNavigation();
     return (
         <>
@@ -17,34 +16,37 @@ export default function LoginForm() {
                 imageStyle={styles.image}
             >
                 <View style={styles.textButton}>
-                    <Text style={styles.textHeaders}>Silahkan login </Text>
+                    <Text style={styles.textHeaders}>Buat akun barumu </Text>
                 </View>
                 <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,0)']}>
                     <Image style={{ position: "absolute", width: "100%" }} source={require('../assets/Rectangle50.png')} />
                     <View style={{ width: "80%" }}>
                         <View style={{ marginBottom: 20}}>
-                            <TextInput label="Email"
+                        <TextInput label="Name"
                                 left={<TextInput.Icon icon="email" />}
                                 mode="outlined"
-                                style={{ margin: 10 , justifyContent : 'flex-start'}} />
+                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
+                                 <TextInput label="Email"
+                                left={<TextInput.Icon icon="email" />}
+                                mode="outlined"
+                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
+                            <TextInput label="Telpon"
+                                left={<TextInput.Icon icon="email" />}
+                                mode="outlined"
+                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
                             <TextInput label="Password"
                                 left={<TextInput.Icon icon="form-textbox-password" />}
                                 mode="outlined"
                                 secureTextEntry={true}
-                                style={{ margin: 10 }} 
+                                style={{ margin: 5 }} 
                                 right={<TextInput.Icon icon="eye" />}
                                 />
                         </View>
                         <View style={styles.button}>
-                            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
-                                <Text style={styles.text}>Sign In</Text>
+                            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('HomeTab')}>
+                                <Text style={styles.text}>Submit</Text>
                             </Pressable>
                         </View>
-                        <View style={styles.button}>
-                            <Pressable style={styles.buttonn2} onPress={() => navigation.navigate('RegisterForm')}>
-                                <Text style={styles.text1}>Don't have account? click here</Text>
-                            </Pressable>
-                            </View>
                     </View>
                 </LinearGradient>
             </ImageBackground>
@@ -104,7 +106,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     textHeaders: {
-        fontSize: 35,
+        fontSize: 55,
         justifyContent: "center",
         fontWeight: 'bold',
         color: 'white',

@@ -18,7 +18,7 @@ export default function FormAddBahan() {
             <TextInput style={styles.input} multiline={true} placeholder="Didihkan air , rebus ayam hingga matang" />
             <TextInput style={styles.input} multiline={true} placeholder="Didihkan air , rebus ayam hingga matang" />
             <Text style={styles.textplus}>+ Langkah</Text>
-            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
+            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('HomeTab')}>
                 <Text style={styles.text}>Submit Recipe</Text>
             </Pressable>
         </View>
