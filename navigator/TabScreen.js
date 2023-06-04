@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import HomePage from './HomePage';
+import HomePage from '../Screen/HomePage';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClipboardList, faPlus } from '@fortawesome/free-solid-svg-icons';
-import FormAdd from './FormAdd';
-import LoginForm from './LoginForm';
+import FormAdd from '../Screen/FormAdd';
+import LoginForm from '../Screen/LoginForm';
 
 const Tab = createBottomTabNavigator();
 

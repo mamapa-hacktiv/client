@@ -17,42 +17,63 @@ import { useNavigation } from '@react-navigation/native';
 
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const IMAGES = [
-  "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg",
-  "https://media.istockphoto.com/id/526149515/photo/nasi-lemak-malaysian-cuisine.webp?b=1&s=170667a&w=0&k=20&c=tAOa6dWXSEOM3YZmKFtQJgeak-WKNdvcpfKF0FFbA1w=",
-  "https://media.istockphoto.com/id/1144681924/id/foto/nasi-padang-dengan-ayam-cabai-hijau-nasi-padang.jpg?s=170667a&w=0&k=20&c=-D3GVhmmDexjYSl6eWUdP3UgGcmKzb3j7dGLYyIGuP8=",
+  {
+    imageUrl :"https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg",
+    title : "Nasi Goreng",
+    cookingTime : "20 menit"
+  },
+  {
+    imageUrl :"https://media.istockphoto.com/id/526149515/photo/nasi-lemak-malaysian-cuisine.webp?b=1&s=170667a&w=0&k=20&c=tAOa6dWXSEOM3YZmKFtQJgeak-WKNdvcpfKF0FFbA1w=",
+    title : "Nasi Padang",
+    cookingTime : "20 menit"
+  },
+  {
+    imageUrl : "https://media.istockphoto.com/id/1144681924/id/foto/nasi-padang-dengan-ayam-cabai-hijau-nasi-padang.jpg?s=170667a&w=0&k=20&c=-D3GVhmmDexjYSl6eWUdP3UgGcmKzb3j7dGLYyIGuP8=",
+    title : "Nasi Uduk pagi pagi enak sekali",
+    cookingTime : "20 menit"
+  }
 ];
 
 export default function HomePage() {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
-        <View style={{ flex: 1.5, height: 250, zIndex : -1 }}>
+        <View style={{ flex: 1.5, height: 250}}>
           <Carousel
             data={IMAGES}
-            renderItem={(item) => (
-              <Image
-              key={item}
-              src={item}
-              style={{
-                  height: "auto",
-                  width: DEVICE_WIDTH,
-                  resizeMode: "cover",
-                  position: "relative"
-                }}
+            renderItem={(item,index) => (
+              <View key={index}
+                style={{
+                  height: 250, position: 'relative',
+                  width: DEVICE_WIDTH
+                }}>
+                  <View style={{position : 'absolute' , zIndex : 3, bottom: 40, marginLeft: 10,}}>
+                  <Text style={{fontWeight : 'bold',fontSize: 20, color : 'white'}} >{item.title}</Text>
+                  <Text style={styles.textCategory} >{item.cookingTime}</Text>
+                  </View>
+                <Image
+                  src={item.imageUrl}
+                  style={{
+                    height: 250,
+                    width: DEVICE_WIDTH,
+                    resizeMode: "cover",
+                    position: "relative"
+                  }}
                 />
-                )}
+              </View>
+            )}
           />
-                <Image style={{ position: "absolute", marginTop: 189, width: "100%" }} source={require('../assets/vector1.png')}/>
+            <Image style={{ position: "absolute", marginTop: 180,  width: "100%" }} source={require('../assets/vector12.png')} />
         </View>
-        <View style={{ flex: 3 }}>
+        <View style={{ flex: 3,backgroundColor : 'white' }}>
           <View style={styles.fixToText}>
             <Pressable
               style={styles.button1}
-              onPress={() => Alert.alert("Search page")}
+              onPress={() => navigation.navigate('SearchPage')}
             >
-              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass}  size={15} style={{color: "#ffffff",}} /> Search</Text>
+              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} size={15} style={{ color: "#ffffff", }} /> Search</Text>
             </Pressable>
             <Pressable
               style={styles.button}
@@ -67,32 +88,32 @@ export default function HomePage() {
               style={styles.buttonCategory}
               onPress={() => navigation.navigate('RecipeList')}
             >
-                <FontAwesomeIcon icon={faMugSaucer} size={30} style={{color: "#ffffff",}} />
-              <Text style={styles.textCategory}>Breakfast</Text>
+              <FontAwesomeIcon icon={faMugSaucer} size={30} style={{ color: "#ffffff", }} />
+              <Text style={styles.textCategory}>Sarapan</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Utama")}
             >
-                <FontAwesomeIcon icon={faBowlFood} size={30} style={{color: "#ffffff",}} />
-              <Text style={styles.textCategory}>Lunch</Text>
+              <FontAwesomeIcon icon={faBowlFood} size={30} style={{ color: "#ffffff", }} />
+              <Text style={styles.textCategory}>Utama</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Dessert")}
             >
-                <FontAwesomeIcon icon={faIceCream} size={30} style={{color: "#ffffff",}} />
+              <FontAwesomeIcon icon={faIceCream} size={30} style={{ color: "#ffffff", }} />
               <Text style={styles.textCategory}>Dessert</Text>
             </Pressable>
             <Pressable
               style={styles.buttonCategory}
               onPress={() => Alert.alert("Snack")}
             >
-                <FontAwesomeIcon icon={faCookieBite} size={30} style={{color: "#ffffff",}} />
+              <FontAwesomeIcon icon={faCookieBite} size={30} style={{ color: "#ffffff", }} />
               <Text style={styles.textCategory}>Snack</Text>
             </Pressable>
           </View>
-          
+
           <Text style={styles.textHeaders}>Resep Terbaru</Text>
           <View
             style={{

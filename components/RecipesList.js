@@ -5,7 +5,7 @@ const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width < height ? width : height;
 const recipeNumColums = 2;
 const RECIPE_ITEM_HEIGHT = 150;
-const RECIPE_ITEM_MARGIN = 20;
+const RECIPE_ITEM_MARGIN = 3;
 
 const data = [
     {
@@ -63,23 +63,21 @@ export default function RecipesList() {
 
 const styles = StyleSheet.create({
     container: {
-        // marginLeft: RECIPE_ITEM_MARGIN,
-        // marginRight: RECIPE_ITEM_MARGIN,
+        marginLeft: RECIPE_ITEM_MARGIN,
+        marginRight: RECIPE_ITEM_MARGIN,
         marginTop: 20,
         width: (SCREEN_WIDTH - (recipeNumColums + 1) * RECIPE_ITEM_MARGIN) / recipeNumColums,
-        // height: RECIPE_ITEM_HEIGHT + 50,
+        height: RECIPE_ITEM_HEIGHT + 50,
         borderColor: '#cccccc',
         borderWidth: 0.5,
-        borderRadius: 15
-
+        borderRadius: 20
     },
     photo: {
-        width: 150,
-        // marginTop : 0,
+        width: "100%",
+        marginTop : 0,
         height: 150,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
-        // resizeMode : 'center'
     },
     title: {
         fontSize: 17,

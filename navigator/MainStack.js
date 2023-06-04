@@ -1,12 +1,12 @@
 import { StyleSheet } from 'react-native'
 import React from 'react'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import LandingPage from './LandingPage'
+import LandingPage from '../Screen/LandingPage'
 import TabScreen from './TabScreen';
 import RecipesList from '../components/RecipesList';
-import FormAddBahan from './FormAddBahan';
-import RegisterForm from './RegisterForm';
-import HomePage from './HomePage';
+import FormAddBahan from '../Screen/FormAddBahan';
+import RegisterForm from '../Screen/RegisterForm';
+import SearchPage from '../Screen/SearchPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +18,7 @@ export default function MainStack() {
             <Stack.Screen name="RecipeList" component={RecipesList}  />
             <Stack.Screen name="FormAddBahan" component={FormAddBahan}  />
             <Stack.Screen name="RegisterForm" component={RegisterForm} options={{ headerShown : false}}  />
+            <Stack.Screen name="SearchPage" component={SearchPage} options={{ headerShown : false}}  />
         </Stack.Navigator>
     )
 }
