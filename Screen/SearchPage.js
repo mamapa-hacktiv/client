@@ -1,11 +1,13 @@
-import { Image, Text, TextInput, View, VirtualizedList } from "react-native";
+import { Image, Text, TextInput, TouchableOpacity, View, VirtualizedList } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft, faBars, faCircleXmark, faFilter, faGripLinesVertical, faSortDown } from "@fortawesome/free-solid-svg-icons";
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useNavigation } from '@react-navigation/core';
 
 
 export default function SearchPage() {
+  const navigation = useNavigation();
   return (
     <>
       <SafeAreaView style={{ flex: 1, position: 'relative' }}>
@@ -29,7 +31,9 @@ export default function SearchPage() {
         </View>
         <View style={{ flex: 1, flexDirection: 'row' }}>
           <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 7 }}>
-            <FontAwesomeIcon icon={faArrowLeft} size={18} />
+            <TouchableOpacity onPress={() => navigation.navigate('HomeTab')}>
+            <FontAwesomeIcon icon={faArrowLeft} size={18}  />
+            </TouchableOpacity>
             <Text style={{ fontWeight: "500", fontSize: 15, paddingBottom: 2 }}>Back</Text>
           </View>
           <View style={{ flex: 3, justifyContent: 'center' }}>
