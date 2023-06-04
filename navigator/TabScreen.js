@@ -7,6 +7,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faClipboardList, faPlus } from '@fortawesome/free-solid-svg-icons';
 import FormAdd from '../Screen/FormAdd';
 import LoginForm from '../Screen/LoginForm';
+import Favorit from '../Screen/Favorit';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,6 +27,17 @@ export default function TabScreen() {
                     tabBarLabel: 'HomeTab',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="home" color={color} size={size} />
+                        ),
+                    }}
+            />
+            <Tab.Screen
+                name="Favorit"
+                component={Favorit}
+                options={{
+                    
+                    tabBarLabel: 'Favorit',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="heart" color={color} size={size} />
                         ),
                     }}
             />
