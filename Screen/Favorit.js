@@ -9,28 +9,34 @@ const RECIPE_ITEM_MARGIN = 3;
 
 const data = [
     {
-        name : "Nasi Goreng", 
+        name : "Nasi Uduk", 
     },
     {
-        name : "Nasi Goreng", 
+        name : "Nasi Uduk", 
     },
     {
-        name : "Nasi Goreng", 
+        name : "Nasi Uduk", 
     },
     {
-        name : "Nasi Goreng", 
+        name : "Nasi Uduk", 
+    },
+    {
+        name : "Nasi Uduk", 
+    },
+    {
+        name : "Nasi Uduk", 
     },
 ]
 
 
-export default function RecipesList() {
+export default function Favorit() {
     return (
         <>
         <FlatList data={data} numColumns={2}
-                renderItem={() => {
+                renderItem={(data) => {
                     return <View style={styles.container}>
                     <Image style={styles.photo} source={{ uri: "https://media.istockphoto.com/id/526149515/photo/nasi-lemak-malaysian-cuisine.webp?b=1&s=170667a&w=0&k=20&c=tAOa6dWXSEOM3YZmKFtQJgeak-WKNdvcpfKF0FFbA1w=" }} />
-                    <Text style={styles.title}>Nasi Goreng</Text>
+                    <Text style={styles.title}>Nasi uduk</Text>
                             </View>
                 }}
         />
@@ -43,6 +49,7 @@ const styles = StyleSheet.create({
     container: {
         marginLeft: RECIPE_ITEM_MARGIN,
         marginRight: RECIPE_ITEM_MARGIN,
+        overflow: "hidden",
         marginTop: 20,
         width: (SCREEN_WIDTH - (recipeNumColums + 1) * RECIPE_ITEM_MARGIN) / recipeNumColums,
         height: RECIPE_ITEM_HEIGHT + 50,
