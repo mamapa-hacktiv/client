@@ -69,6 +69,16 @@ export default function DetailPage() {
       status: 'Sajikan nasi uduk bersama irisan telur dadar, tempe orek, bakwan, bihun goreng dan beri taburan bawang goreng'
     }
   ]
+
+  const ingredient = [
+    { ingredients: '2 cup rice (use the cup that comes with the rice cooker)' },
+    { ingredients: '1/2 cup thick coconut milk (regular US cup)' },
+    { ingredients: '2 lemongrass (Indonesian: sereh), bruised and knotted' },
+    { ingredients: '2 fresh/frozen pandan leaves, washed and knotted' },
+    { ingredients: '4 Indonesian bay leaves (Indonesian: daun salam)' },
+    { ingredients: '2 thin slices of galangal (Indonesian: lengkuas)' },
+    { ingredients: '1 teaspoon coriander powder (Indonesian: bubuk ketumbar)' },
+  ]
   return (
     <>
       <ScrollView>
@@ -76,7 +86,7 @@ export default function DetailPage() {
           <View>
             <YoutubePlayer
               height={230}
-              play={true}
+              play={false}
               videoId={"hAv7XXll_Js"}
             />
           </View>
@@ -84,24 +94,13 @@ export default function DetailPage() {
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
           <View style={styles.ingridientsContainer}>
             <View style={{ padding: 20 }}>
-              <FlatList
-                data={[
-                  { ingredients: '2 cup rice (use the cup that comes with the rice cooker)' },
-                  { ingredients: '1/2 cup thick coconut milk (regular US cup)' },
-                  { ingredients: '2 lemongrass (Indonesian: sereh), bruised and knotted' },
-                  { ingredients: '2 fresh/frozen pandan leaves, washed and knotted' },
-                  { ingredients: '4 Indonesian bay leaves (Indonesian: daun salam)' },
-                  { ingredients: '2 thin slices of galangal (Indonesian: lengkuas)' },
-                  { ingredients: '1 teaspoon coriander powder (Indonesian: bubuk ketumbar)' },
-                ]}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={{ marginBottom: 5 }}>
-                      <Text style={{ fontSize: 14 }}>{`\u2022 ${item.ingredients}`}</Text>
-                    </View>
-                  );
-                }}
-              />
+              {ingredient.map((item, index) => {
+                return (
+                  <View key={index} style={{ marginBottom: 5 }}>
+                    <Text style={{ fontSize: 14 }}>{`\u2022 ${item.ingredients}`}</Text>
+                  </View>
+                );
+              })}
             </View>
           </View>
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Steps</Text>
