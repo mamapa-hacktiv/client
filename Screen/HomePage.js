@@ -11,6 +11,7 @@ import {
   ActivityIndicator
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -97,7 +98,6 @@ export default function HomePage() {
                   }}
                 />
               </View>
-
             )}
           />
           <Image style={{ position: "absolute", marginTop: 180, width: "100%" }} source={require('../assets/vector12.png')} />
@@ -113,9 +113,9 @@ export default function HomePage() {
             </Pressable>
             <Pressable
               style={styles.button}
-              onPress={() => Alert.alert("Chat gpt page")}
+              onPress={() => navigation.navigate('Chat with AI')}
             >
-              <Text style={styles.text}>Chat Gpt</Text>
+              <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Chat Gpt</Text>
             </Pressable>
           </View>
 
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginRight: RECIPE_ITEM_MARGIN,
     marginTop: 20,
     width: (SCREEN_WIDTH - (recipeNumColums + 10) * RECIPE_ITEM_MARGIN) / recipeNumColums,
-    height: RECIPE_ITEM_HEIGHT + 100,
+    height: RECIPE_ITEM_HEIGHT + 110,
     borderColor: '#cccccc',
     borderWidth: 0.5,
     borderRadius: 20,
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   button1: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
@@ -220,7 +220,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 6,
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,

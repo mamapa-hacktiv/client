@@ -120,13 +120,13 @@ export default function FormAdd() {
   };
 
 
-  if (!access_token) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>belum login, login dulu</Text>
-      </View>
-    )
-  }
+  // if (!access_token) {
+  //   return (
+  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+  //       <Text>belum login, login dulu</Text>
+  //     </View>
+  //   )
+  // }
 
   if (loading) return <ActivityIndicator size="large" />
 

@@ -18,7 +18,7 @@ const authLink = setContext((_, { headers }) => {
     headers: {
       ...headers,
       "apollo-require-preflight": "true",
-      "access_token": access_token
+      "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjg1OTI5MzYyfQ.GwvvD5-hP5hykhYgthL5yKGkQGIySAq1g_DmWGjPD-o"
     }
   };
 });

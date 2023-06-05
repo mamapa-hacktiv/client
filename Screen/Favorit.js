@@ -40,13 +40,13 @@ AsyncStorage.getItem("access_token").then((value) => { access_token = value })
 
 export default function Favorit() {
     const { loading, error, data } = useQuery(fetchRecipe);
-    if (!access_token) {
-        return (
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>belum login, login dulu</Text>
-            </View>
-        )
-    }
+    // if (!access_token) {
+    //     return (
+    //         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    //             <Text>belum login, login dulu</Text>
+    //         </View>
+    //     )
+    // }
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

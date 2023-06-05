@@ -1,7 +1,7 @@
-import { StyleSheet, Text, View, Image, Button, Pressable, TextInput, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Image, Button, Pressable, TextInput, ScrollView, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowRight, faCamera } from '@fortawesome/free-solid-svg-icons'
+import { faArrowRight, faCamera, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useNavigation } from '@react-navigation/native';
 import { useMutation, gql, useReactiveVar } from '@apollo/client';
 import { recipeForm } from '../graphql/variable';
@@ -15,13 +15,15 @@ const mutationUpload = gql`
 }
 `;
 
+const { width, height } = Dimensions.get('window')
+
 export default function FormAddBahan() {
     const navigation = useNavigation();
     const [ingredients, setIngredients] = useState([{ "name": "" }])
     const [steps, setSteps] = useState(
         [
             {
-                "image": "null",
+                "image": [],
                 "instruction": ""
             }
         ]
@@ -35,6 +37,7 @@ export default function FormAddBahan() {
 
     const uploadRecipe = async () => {
         try {
+            console.log(recipeForm());
             await uploadForm({
                 variables: {
                     newRecipe: recipeForm()
@@ -67,11 +70,40 @@ export default function FormAddBahan() {
     });
     const renderedSteps = steps.map((value, index) => {
         return (
-            <TextInput key={index} style={styles.input} multiline={true} placeholder="Potong Ayam jadi beberapa bagian12 bagian misalnya" value={value.instruction} onChangeText={(e) => stepOnChangeHandle(index, e, "instruction")} />
+            <TextInput key={index} style={styles.input} multiline={true} placeholder="Potong Ayam jadi beberapa bagian12 bagian misalnya" value={value.instruction} onChangeText={(e) => stepOnChangeHandle(index, e, "instruction")} />  
         );
     });
 
-
+    // const pickImage = async () => {
+    //     try {
+    //       let data = await ImagePicker.launchImageLibraryAsync({
+    //         mediaTypes: ImagePicker.MediaTypeOptions.All,
+    //         allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //       });
+    
+    //       const result = data.assets[0];
+    //       let localUri = result.uri;
+    //       let filename = localUri.split('/').pop();
+    //       let match = /\.(\w+)$/.exec(filename);
+    //       let type = match ? `image/${match[1]}` : `image`;
+    
+    //       const file = new ReactNativeFile({
+    //         uri: localUri,
+    //         name: filename,
+    //         type,
+    //       });
+    
+    //       setForm({ ...form, image: [file] })
+    
+    //       if (!result.cancelled) {
+    //         setImage(result);
+    //       }
+    //     } catch (e) {
+    //       console.log(e);
+    //     }
+    //   };
 
 
 
@@ -100,7 +132,6 @@ export default function FormAddBahan() {
                     }])
                 }
                 }>
-
                     <Text style={styles.textplus}>+ Langkah</Text>
                 </TouchableOpacity>
                 <Pressable style={styles.buttonn} onPress={() => {
@@ -123,13 +154,31 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
-        paddingHorizontal: 32,
+        paddingHorizontal: 15,
         borderRadius: 20,
         elevation: 3,
         backgroundColor: "#EDEDED",
         width: "80%",
         marginBottom: 10,
     },
+    reactionContainer: {
+        width: width - 30,
+        padding: 20,
+        margin: 15,
+        elevation: 10,
+        borderRadius: 20,
+        backgroundColor: 'white',
+        flexDirection: 'row',
+        gap: 5
+      },
+      submitReaction: {
+        alignItems: 'flex-end',
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+        borderRadius: 20,
+        elevation: 3,
+        backgroundColor: "#EF551D",
+      },
     textHeaders: {
         fontSize: 25,
         justifyContent: "center",

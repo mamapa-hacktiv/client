@@ -40,12 +40,13 @@ export default function LoginForm() {
                 }
             });
             await AsyncStorage.setItem("access_token", data.login.access_token);
+            console.log(data.login.access_token);
 
             setLoginForm({
                 email: '',
                 password: ''
             })
-            navigation.navigate('Home')
+            navigation.navigate('HomeTab')
         } catch (error) {
             console.log(error.errors, "<---------");
         }

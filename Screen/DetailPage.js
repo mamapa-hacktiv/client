@@ -85,9 +85,9 @@ export default function DetailPage() {
         <SafeAreaView>
           <View>
             <YoutubePlayer
-              height={230}
-              play={false}
-              videoId={"hAv7XXll_Js"}
+              height={250}
+              play={true}
+              videoId={"esPA5B5nVH8"}
             />
           </View>
 
@@ -119,7 +119,7 @@ export default function DetailPage() {
                 )
               }}
             />
-            <View style={{ flexDirection: 'row', gap: 110 }}>
+            <View style={{ flexDirection: 'row', gap: 80 }}>
               <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
                 <Text style={styles.text}>Previous</Text>
               </TouchableOpacity>
