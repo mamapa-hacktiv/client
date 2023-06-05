@@ -16,9 +16,10 @@ import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBowlFood, faCookieBite, faIceCream, faMagnifyingGlass, faMugSaucer } from "@fortawesome/free-solid-svg-icons";
+import { faBowlFood, faCookieBite, faIceCream, faMagnifyingGlass, faMugSaucer, faTimes } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from '@react-navigation/native';
 import { gql, useQuery } from '@apollo/client';
+import { faClock } from "@fortawesome/free-regular-svg-icons";
 
 const fetchRecipe = gql`
  query FindRecipes {
@@ -40,19 +41,24 @@ const RECIPE_ITEM_MARGIN = 3;
 const DEVICE_WIDTH = Dimensions.get("window").width;
 const IMAGES = [
   {
-    imageUrl: "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg",
+    imageUrl: "https://i.ibb.co/PCSZqGY/nasi-goreng.png",
     title: "Nasi Goreng",
-    cookingTime: "20 menit"
+    cookingTime: "35 menit"
   },
   {
-    imageUrl: "https://media.istockphoto.com/id/526149515/photo/nasi-lemak-malaysian-cuisine.webp?b=1&s=170667a&w=0&k=20&c=tAOa6dWXSEOM3YZmKFtQJgeak-WKNdvcpfKF0FFbA1w=",
-    title: "Nasi Padang",
-    cookingTime: "20 menit"
+    imageUrl: "https://i.ibb.co/98wNVz6/soto-mie.png",
+    title: "Soto mie",
+    cookingTime: "15 menit"
   },
   {
-    imageUrl: "https://media.istockphoto.com/id/1144681924/id/foto/nasi-padang-dengan-ayam-cabai-hijau-nasi-padang.jpg?s=170667a&w=0&k=20&c=-D3GVhmmDexjYSl6eWUdP3UgGcmKzb3j7dGLYyIGuP8=",
-    title: "Nasi Uduk pagi pagi enak sekali",
-    cookingTime: "20 menit"
+    imageUrl: "https://i.ibb.co/fqs04n0/Jengkol-sambel-teri.png",
+    title: "Jengkol sambel teri",
+    cookingTime: "30 menit"
+  },
+  {
+    imageUrl: "https://i.ibb.co/S5fSdgg/Tumis-kangkung.png",
+    title: "Tumis kangkung",
+    cookingTime: "10 menit"
   }
 ];
 
@@ -71,27 +77,26 @@ export default function HomePage() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
-        <View style={{ flex: 1.5, height: 250 }}>
+        <View style={{ flex: 2, height: 300}}>
           <Carousel
             data={IMAGES}
             renderItem={(item, index) => (
-
               <View
                 key={index}
                 style={{
                   height: 250, position: 'relative',
-                  width: DEVICE_WIDTH
+                  width: DEVICE_WIDTH,
+                  
                 }}
                 colors={['green', 'red']}>
-                <View style={{ position: 'absolute', zIndex: 3, bottom: 40, marginLeft: 10, }}>
-                  <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white' }} >{item.title}</Text>
-                  <Text style={styles.text1} >{item.cookingTime}</Text>
+                <View style={{ position: 'absolute', zIndex: 3, bottom: 20, marginLeft: 20, }}>
+                  <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white',elevation : 100 }} >{item.title}</Text>
+                  <Text style={styles.textTime} ><FontAwesomeIcon icon={faClock} color={"white"}></FontAwesomeIcon> {item.cookingTime}</Text>
                 </View>
-
                 <Image
                   src={item.imageUrl}
                   style={{
-                    height: 250,
+                    height: 310,
                     width: DEVICE_WIDTH,
                     resizeMode: "cover",
                     position: "relative"
@@ -100,8 +105,7 @@ export default function HomePage() {
               </View>
             )}
           />
-          <Image style={{ position: "absolute", marginTop: 180, width: "100%" }} source={require('../assets/vector12.png')} />
-          <Image style={{ position: "absolute", width: "100%", left: 100, top: 90, resizeMode: 'center', height: "100%" }} source={require('../assets/vectorfood.png')} />
+          <Image style={{ position: "absolute", marginTop: 220, width: "100%" }} source={require('../assets/vector12.png')} />
         </View>
         <View style={{ flex: 3, backgroundColor: 'white' }}>
           <View style={styles.fixToText}>
@@ -109,13 +113,13 @@ export default function HomePage() {
               style={styles.button1}
               onPress={() => navigation.navigate('SearchPage')}
             >
-              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} size={15} style={{ color: "#ffffff", }} /> Search</Text>
+              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} size={15} style={{ color: "#98A8BA", }} /> Search</Text>
             </Pressable>
             <Pressable
               style={styles.button}
               onPress={() => navigation.navigate('Chat with AI')}
             >
-              <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Chat Gpt</Text>
+              <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Ask Me!</Text>
             </Pressable>
           </View>
 
@@ -127,6 +131,7 @@ export default function HomePage() {
                 <Pressable key={index} onPress={() => navigation.navigate('DetailPage', { id: el.id })}>
 
                   <View style={styles.container}>
+                    
                     <Image style={styles.photo} source={{ uri: el.image }} />
                     <Text style={styles.title}>{el.title}</Text>
                     <Text style={styles.descriptions}>{el.description}</Text>
@@ -150,7 +155,7 @@ const styles = StyleSheet.create({
     marginRight: RECIPE_ITEM_MARGIN,
     marginTop: 20,
     width: (SCREEN_WIDTH - (recipeNumColums + 10) * RECIPE_ITEM_MARGIN) / recipeNumColums,
-    height: RECIPE_ITEM_HEIGHT + 110,
+    height: RECIPE_ITEM_HEIGHT + 50,
     borderColor: '#cccccc',
     borderWidth: 0.5,
     borderRadius: 20,
@@ -158,17 +163,17 @@ const styles = StyleSheet.create({
   photo: {
     width: "100%",
     marginTop: 0,
-    height: 150,
+    height: 100,
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
   title: {
-    fontSize: 17,
+    fontSize: 13,
     fontWeight: 'bold',
-    textAlign: 'center',
+    textAlign: 'left',
     color: '#444444',
     marginRight: 5,
-    marginLeft: 5,
+    marginLeft: 10,
   },
   fixToText: {
     marginTop: 20,
@@ -183,7 +188,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
-    backgroundColor: "gray",
+    backgroundColor: "#F4F1F1",
   },
   buttonCategory: {
     alignItems: "center",
@@ -203,7 +208,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
   },
   descriptions: {
-    fontSize: 13,
+    fontSize: 11,
     justifyContent: "center",
     fontWeight: "light",
     color: "black",
@@ -211,6 +216,13 @@ const styles = StyleSheet.create({
     marginRight: 10
   },
   text1: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "light",
+    letterSpacing: 0.25,
+    color: "#98A8BA",
+  },
+  textTime: {
     fontSize: 16,
     lineHeight: 21,
     fontWeight: "light",

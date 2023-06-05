@@ -26,7 +26,7 @@ export default function LandingPage() {
                     </View>
                     <View style={styles.button}>
                         <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
-                            <Text style={styles.text}>Get started</Text>
+                            <Text style={styles.text}>Mulai</Text>
                         </Pressable>
                     </View>
                     </View>
