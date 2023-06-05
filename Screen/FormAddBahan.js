@@ -23,7 +23,7 @@ export default function FormAddBahan() {
     const [steps, setSteps] = useState(
         [
             {
-                "image": [],
+                "image": '',
                 "instruction": ""
             }
         ]
@@ -70,7 +70,7 @@ export default function FormAddBahan() {
     });
     const renderedSteps = steps.map((value, index) => {
         return (
-            <TextInput key={index} style={styles.input} multiline={true} placeholder="Potong Ayam jadi beberapa bagian12 bagian misalnya" value={value.instruction} onChangeText={(e) => stepOnChangeHandle(index, e, "instruction")} />  
+            <TextInput key={index} style={styles.input} multiline={true} placeholder="Potong Ayam jadi beberapa bagian12 bagian misalnya" value={value.instruction} onChangeText={(e) => stepOnChangeHandle(index, e, "instruction")} />
         );
     });
 
@@ -82,21 +82,21 @@ export default function FormAddBahan() {
     //         aspect: [4, 3],
     //         quality: 1,
     //       });
-    
+
     //       const result = data.assets[0];
     //       let localUri = result.uri;
     //       let filename = localUri.split('/').pop();
     //       let match = /\.(\w+)$/.exec(filename);
     //       let type = match ? `image/${match[1]}` : `image`;
-    
+
     //       const file = new ReactNativeFile({
     //         uri: localUri,
     //         name: filename,
     //         type,
     //       });
-    
+
     //       setForm({ ...form, image: [file] })
-    
+
     //       if (!result.cancelled) {
     //         setImage(result);
     //       }
@@ -170,15 +170,15 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         flexDirection: 'row',
         gap: 5
-      },
-      submitReaction: {
+    },
+    submitReaction: {
         alignItems: 'flex-end',
         paddingVertical: 5,
         paddingHorizontal: 10,
         borderRadius: 20,
         elevation: 3,
         backgroundColor: "#EF551D",
-      },
+    },
     textHeaders: {
         fontSize: 25,
         justifyContent: "center",
