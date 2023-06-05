@@ -1,4 +1,4 @@
-import { Dimensions, Text, TextInput, View, VirtualizedList, StyleSheet, TouchableOpacity, ScrollView,FlatList } from "react-native";
+import { Dimensions, Text, TextInput, View, VirtualizedList, StyleSheet, TouchableOpacity, ScrollView, FlatList } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
@@ -69,40 +69,39 @@ export default function DetailPage() {
       status: 'Sajikan nasi uduk bersama irisan telur dadar, tempe orek, bakwan, bihun goreng dan beri taburan bawang goreng'
     }
   ]
+
+  const ingredient = [
+    { ingredients: '2 cup rice (use the cup that comes with the rice cooker)' },
+    { ingredients: '1/2 cup thick coconut milk (regular US cup)' },
+    { ingredients: '2 lemongrass (Indonesian: sereh), bruised and knotted' },
+    { ingredients: '2 fresh/frozen pandan leaves, washed and knotted' },
+    { ingredients: '4 Indonesian bay leaves (Indonesian: daun salam)' },
+    { ingredients: '2 thin slices of galangal (Indonesian: lengkuas)' },
+    { ingredients: '1 teaspoon coriander powder (Indonesian: bubuk ketumbar)' },
+  ]
   return (
     <>
-        <ScrollView>
-      <SafeAreaView>
+      <ScrollView>
+        <SafeAreaView>
           <View>
             <YoutubePlayer
-              height={230}
+              height={250}
               play={true}
-              videoId={"hAv7XXll_Js"}
+              videoId={"esPA5B5nVH8"}
             />
           </View>
-          
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
+
+          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
           <View style={styles.ingridientsContainer}>
-          <View style={{ padding: 20 }}>
-        <FlatList
-          data={[
-            { ingredients: '2 cup rice (use the cup that comes with the rice cooker)' },
-            { ingredients: '1/2 cup thick coconut milk (regular US cup)' },
-            { ingredients: '2 lemongrass (Indonesian: sereh), bruised and knotted' },
-            { ingredients: '2 fresh/frozen pandan leaves, washed and knotted' },
-            { ingredients: '4 Indonesian bay leaves (Indonesian: daun salam)' },
-            { ingredients: '2 thin slices of galangal (Indonesian: lengkuas)' },
-            { ingredients: '1 teaspoon coriander powder (Indonesian: bubuk ketumbar)' },
-          ]}
-          renderItem={({ item }) => {
-            return (
-              <View style={{ marginBottom: 5 }}>
-                <Text style={{ fontSize: 14 }}>{`\u2022 ${item.ingredients}`}</Text>
-              </View>
-            );
-          }}
-        />
-      </View>
+            <View style={{ padding: 20 }}>
+              {ingredient.map((item, index) => {
+                return (
+                  <View key={index} style={{ marginBottom: 5 }}>
+                    <Text style={{ fontSize: 14 }}>{`\u2022 ${item.ingredients}`}</Text>
+                  </View>
+                );
+              })}
+            </View>
           </View>
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Steps</Text>
           <View style={styles.indicatorContainer}>
@@ -120,24 +119,24 @@ export default function DetailPage() {
                 )
               }}
             />
-            <View style={{flexDirection : 'row', gap: 110}}>
-            <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
-              <Text style={styles.text}>Previous</Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
-              <Text style={styles.text}>Next</Text>
-            </TouchableOpacity>
+            <View style={{ flexDirection: 'row', gap: 80 }}>
+              <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
+                <Text style={styles.text}>Previous</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
+                <Text style={styles.text}>Next</Text>
+              </TouchableOpacity>
             </View>
           </View>
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Reaction</Text>
           <View style={styles.reactionContainer}>
-          <TextInput style={styles.input} placeholder="Comments" />
-          <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
+            <TextInput style={styles.input} placeholder="Comments" />
+            <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
               <Text style={styles.text}>Submit</Text>
             </TouchableOpacity>
           </View>
-      </SafeAreaView>
-        </ScrollView>
+        </SafeAreaView>
+      </ScrollView>
     </>
   )
 }
@@ -152,7 +151,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 4,
     elevation: 3,
-    width : "65%",
+    width: "65%",
     backgroundColor: "#EDEDED",
   },
   hr: {
@@ -194,8 +193,8 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 20,
     backgroundColor: 'white',
-    flexDirection : 'row',
-    gap : 5
+    flexDirection: 'row',
+    gap: 5
   },
   lblcontainer: {
     marginTop: 40,

@@ -22,7 +22,7 @@ export default function MainStack() {
             <Stack.Screen name="RegisterForm" component={RegisterForm} options={{ headerShown : false}}  />
             <Stack.Screen name="SearchPage" component={SearchPage} options={{ headerShown : false}}  />
             <Stack.Screen name="DetailPage" component={DetailPage} />
-            <Stack.Screen name="AIPage" component={AIPage} options={{ headerShown : false}} />
+            <Stack.Screen name="AIPage" component={AIPage} />
         </Stack.Navigator>
     )
 }

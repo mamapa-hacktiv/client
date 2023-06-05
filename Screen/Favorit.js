@@ -1,5 +1,33 @@
-import { StyleSheet, Text, View, Dimensions, Image, FlatList } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Dimensions, Image, FlatList, ActivityIndicator } from 'react-native'
+import React, { useEffect } from 'react'
+import { gql, useQuery } from '@apollo/client';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { access_token } from '../graphql/variable';
+
+const fetchRecipe = gql`
+query FindFavorite {
+  findFavorite {
+    Recipe {
+      cookingTime
+      UserId
+      createdAt
+      description
+      id
+      image
+      origin
+      portion
+      updatedAt
+      videoUrl
+      title
+    }
+    UserId
+    RecipeId
+    createdAt
+    updatedAt
+    id
+  }
+}
+`;
 
 const { width, height } = Dimensions.get('window');
 const SCREEN_WIDTH = width < height ? width : height;
@@ -7,39 +35,42 @@ const recipeNumColums = 2;
 const RECIPE_ITEM_HEIGHT = 150;
 const RECIPE_ITEM_MARGIN = 3;
 
-const data = [
-    {
-        name : "Nasi Uduk", 
-    },
-    {
-        name : "Nasi Uduk", 
-    },
-    {
-        name : "Nasi Uduk", 
-    },
-    {
-        name : "Nasi Uduk", 
-    },
-    {
-        name : "Nasi Uduk", 
-    },
-    {
-        name : "Nasi Uduk", 
-    },
-]
-
+let access_token = ""
+AsyncStorage.getItem("access_token").then((value) => { access_token = value })
 
 export default function Favorit() {
+    const { loading, error, data } = useQuery(fetchRecipe);
+    // if (!access_token) {
+    //     return (
+    //         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+    //             <Text>belum login, login dulu</Text>
+    //         </View>
+    //     )
+    // }
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" />
+            </View>
+        )
+    }
+    if (data.findFavorite.length === 0) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <Text>hehh ngga ada ya, carik dulu sana!</Text>
+            </View>
+        )
+    }
     return (
         <>
-        <FlatList data={data} numColumns={2}
-                renderItem={(data) => {
+            <FlatList data={data.findFavorite} numColumns={2}
+                renderItem={({ item }) => {
                     return <View style={styles.container}>
-                    <Image style={styles.photo} source={{ uri: "https://media.istockphoto.com/id/526149515/photo/nasi-lemak-malaysian-cuisine.webp?b=1&s=170667a&w=0&k=20&c=tAOa6dWXSEOM3YZmKFtQJgeak-WKNdvcpfKF0FFbA1w=" }} />
-                    <Text style={styles.title}>Nasi uduk</Text>
-                            </View>
+                        <Image style={styles.photo} source={{ uri: item.Recipe.image }} />
+                        <Text style={styles.title}>{item.Recipe.title}</Text>
+                    </View>
                 }}
-        />
+            />
         </>
     )
 }
@@ -59,7 +90,7 @@ const styles = StyleSheet.create({
     },
     photo: {
         width: "100%",
-        marginTop : 0,
+        marginTop: 0,
         height: 150,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
