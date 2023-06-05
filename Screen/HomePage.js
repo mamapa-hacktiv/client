@@ -10,6 +10,7 @@ import {
   FlatList
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -28,19 +29,19 @@ const data = [
       id : 1
   },
   {
-      id : 1
+      id : 2
   },
   {
-      id : 1
+      id : 3
   },
   {
-      id : 1
+      id : 4
   },
   {
-    id : 1
+    id : 5
   },
   {
-  id : 1
+  id : 6
   },
 ]
 
@@ -110,9 +111,9 @@ export default function HomePage() {
             </Pressable>
             <Pressable
               style={styles.button}
-              onPress={() => Alert.alert("Chat gpt page")}
+              onPress={() => navigation.navigate('AIPage')}
             >
-              <Text style={styles.text}>Chat Gpt</Text>
+              <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Chat Gpt</Text>
             </Pressable>
           </View>
 
@@ -181,7 +182,7 @@ title: {
   button1: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
@@ -222,7 +223,7 @@ title: {
   button: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: 12,
+    paddingVertical: 6,
     paddingHorizontal: 32,
     borderRadius: 4,
     elevation: 3,
