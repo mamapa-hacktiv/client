@@ -44,7 +44,11 @@ export default function SearchPage() {
   });
 
   useEffect(() => {
-    refetch({ title: search })
+    const getData = setTimeout(() => {
+      console.log("fetch");
+      refetch({ title: search })
+    }, 1000);
+    return () => clearTimeout(getData)
   }, [search])
 
   if (loading) {
