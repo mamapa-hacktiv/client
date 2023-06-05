@@ -113,7 +113,7 @@ export default function HomePage() {
             </Pressable>
             <Pressable
               style={styles.button}
-              onPress={() => navigation.navigate('AIPage')}
+              onPress={() => navigation.navigate('Chat with AI')}
             >
               <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Chat Gpt</Text>
             </Pressable>
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
     marginRight: RECIPE_ITEM_MARGIN,
     marginTop: 20,
     width: (SCREEN_WIDTH - (recipeNumColums + 10) * RECIPE_ITEM_MARGIN) / recipeNumColums,
-    height: RECIPE_ITEM_HEIGHT + 100,
+    height: RECIPE_ITEM_HEIGHT + 110,
     borderColor: '#cccccc',
     borderWidth: 0.5,
     borderRadius: 20,
