@@ -8,6 +8,7 @@ import { faClipboardList, faPlus } from '@fortawesome/free-solid-svg-icons';
 import FormAdd from '../Screen/FormAdd';
 import LoginForm from '../Screen/LoginForm';
 import Favorit from '../Screen/Favorit';
+import Profil from '../Screen/Profil';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,6 +59,17 @@ export default function TabScreen() {
                 options={{
                     headerShown: false,
                     tabBarLabel: 'Profile',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Profiles"
+                component={Profil}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Profiles',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="account" color={color} size={size} />
                     ),
