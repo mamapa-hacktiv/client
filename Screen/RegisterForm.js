@@ -1,10 +1,55 @@
 import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/core';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TextInput } from 'react-native-paper';
+import { useMutation, gql, useReactiveVar } from '@apollo/client';
+
+const registerUpload = gql`
+mutation Register($newUser: newUser) {
+  register(newUser: $newUser) {
+    message
+  }
+}
+`;
 
 export default function RegisterForm() {
+    const [registerForm, setRegisterForm] = useState({
+        "username": "",
+        "phoneNumber": "",
+        "password": "",
+        "email": ""
+    })
+
+    function onchange(value, key) {
+        setRegisterForm({ ...registerForm, [key]: value })
+    }
+
+    const [uploadRegister, { data, loading, error }] = useMutation(registerUpload, {
+        onError: (err) => {
+            console.log(err, "error graph");
+        }
+    });
+
+    const onClick = async () => {
+        try {
+            await uploadRegister({
+                variables: {
+                    newUser: registerForm
+                }
+            });
+            navigation.navigate('Profile')
+            setRegisterForm({
+                "username": "",
+                "phoneNumber": "",
+                "password": "",
+                "email": ""
+            })
+        } catch (error) {
+            console.log(error.errors, "<---------");
+        }
+    };
+
     const navigation = useNavigation();
     return (
         <>
@@ -21,29 +66,36 @@ export default function RegisterForm() {
                 <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,0)']}>
                     <Image style={{ position: "absolute", width: "100%" }} source={require('../assets/Rectangle50.png')} />
                     <View style={{ width: "80%" }}>
-                        <View style={{ marginBottom: 20}}>
-                        <TextInput label="Name"
+                        <View style={{ marginBottom: 20 }}>
+                            <TextInput label="Name"
                                 left={<TextInput.Icon icon="email" />}
                                 mode="outlined"
-                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
-                                 <TextInput label="Email"
+                                style={{ margin: 5, justifyContent: 'flex-start' }}
+                                onChangeText={(e) => onchange(e, 'username')} value={registerForm.username}
+                            />
+                            <TextInput label="Email"
                                 left={<TextInput.Icon icon="email" />}
                                 mode="outlined"
-                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
+                                style={{ margin: 5, justifyContent: 'flex-start' }}
+                                onChangeText={(e) => onchange(e, 'email')} value={registerForm.email}
+                            />
                             <TextInput label="Telpon"
                                 left={<TextInput.Icon icon="email" />}
                                 mode="outlined"
-                                style={{ margin: 5 , justifyContent : 'flex-start'}} />
+                                style={{ margin: 5, justifyContent: 'flex-start' }}
+                                onChangeText={(e) => onchange(e, 'phoneNumber')} value={registerForm.phoneNumber}
+                            />
                             <TextInput label="Password"
                                 left={<TextInput.Icon icon="form-textbox-password" />}
                                 mode="outlined"
                                 secureTextEntry={true}
-                                style={{ margin: 5 }} 
+                                style={{ margin: 5 }}
+                                onChangeText={(e) => onchange(e, 'password')} value={registerForm.password}
                                 right={<TextInput.Icon icon="eye" />}
-                                />
+                            />
                         </View>
                         <View style={styles.button}>
-                            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('HomeTab')}>
+                            <Pressable style={styles.buttonn} onPress={onClick}>
                                 <Text style={styles.text}>Submit</Text>
                             </Pressable>
                         </View>
@@ -60,7 +112,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     button: {
-       marginBottom : 15
+        marginBottom: 15
     },
     textButton: {
         marginBottom: 50,
@@ -74,7 +126,7 @@ const styles = StyleSheet.create({
         borderRadius: 5,
         elevation: 3,
         backgroundColor: "#EF551D",
-        
+
     },
     buttonn2: {
         alignItems: 'center',
@@ -83,7 +135,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 5,
         elevation: 3,
-        borderColor : "black",
+        borderColor: "black",
         backgroundColor: "gray",
     },
     text1: {
