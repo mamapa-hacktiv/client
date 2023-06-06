@@ -62,12 +62,12 @@ export default function SearchPage() {
           <View style={{ flex: 1, flexDirection: 'row', padding: 15, justifyContent: 'space-around' }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 7 }}>
               <TouchableOpacity onPress={() => navigation.navigate('HomeTab')}>
-                <FontAwesomeIcon icon={faArrowLeft} size={25} />
+                <FontAwesomeIcon icon={faArrowLeft} size={20} />
               </TouchableOpacity>
             
             </View>
             <View style={{ flex: 3, justifyContent: 'center' }}>
-              <View style={{ backgroundColor: '#EDEDED', width : 250, height : 40 ,borderRadius: 20,elevation : 2, justifyContent: 'center' }}>
+              <View style={{ backgroundColor: '#EDEDED', width : 250, height : 40 ,borderRadius: 15,elevation : 4, justifyContent: 'center' }}>
                 <TextInput
                   style={{ left: 15 }}
                   placeholder="Nama Resep"

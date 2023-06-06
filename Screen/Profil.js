@@ -62,8 +62,6 @@ export default function Profil() {
     if (access_token) {
         return (
             <ScrollView>
-
-            
             <SafeAreaView>
                 <ImageBackground
                     source={require('../assets/vectorOren.png')}

@@ -3,7 +3,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowLeft, faClock } from "@fortawesome/free-regular-svg-icons";
+import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { gql, useQuery } from '@apollo/client';
 
@@ -105,6 +105,7 @@ const customStyles = {
   labelColor: '#999999',
   labelSize: 13,
   currentStepLabelColor: '#ff3232',
+  borderRadius : 10
 };
 
 export default function DetailPage({ route }) {
@@ -184,7 +185,7 @@ export default function DetailPage({ route }) {
             <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B'}} >by {detailvalue.findRecipe.User.username}</Text>
             <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B'}} ><FontAwesomeIcon icon={faClock} color="#5B5B5B" size={10}></FontAwesomeIcon> {detailvalue.findRecipe.cookingTime}</Text>
             </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Bahan - bahan</Text>
             <View style={styles.ingridientsContainer}>
               <View style={{ padding: 20 }}>
                 {detailvalue.findRecipe.Ingredients.map((item, index) => {
@@ -196,7 +197,7 @@ export default function DetailPage({ route }) {
                 })}
               </View>
             </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Steps</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Langkah - langkah</Text>
             <View style={styles.indicatorContainer}>
               <StepIndicator
                 customStyles={customStyles}
@@ -212,7 +213,7 @@ export default function DetailPage({ route }) {
                     </View>
                     <View style={{alignSelf : 'flex-start'}}>
                       <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
-                        <Text style={styles.text}>Next</Text>
+                        <Text style={styles.text}>Next <FontAwesomeIcon icon={faCircleRight} color="#EF551D" size={15}></FontAwesomeIcon></Text>
                       </TouchableOpacity>
                     </View>
                     </>
@@ -221,16 +222,16 @@ export default function DetailPage({ route }) {
               />
              
             </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Comments</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Komentar</Text>
             <View style={styles.reactionContainer}>
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Marsh</Text>
             <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Resep ini sangat bermanfaat bagiku</Text>
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Bunny</Text>
             <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Terimakasih resep nya</Text>
             <View style={{flexDirection: 'row', gap :7, marginTop: 10}} >
-              <TextInput style={styles.input} placeholder="Comments" />
+              <TextInput style={styles.input} placeholder="keren" />
               <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
-                <Text style={styles.text}>Submit</Text>
+                <Text style={styles.text1}>Submit</Text>
               </TouchableOpacity>
             </View>
             </View>
@@ -259,6 +260,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     width: "65%",
+    height : 40,
     backgroundColor: "#EDEDED",
   },
   hr: {
@@ -316,18 +318,18 @@ const styles = StyleSheet.create({
   },
   nextBtn: {
     alignItems: 'flex-start',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+    paddingVertical:5 ,
+    paddingHorizontal: 10,
     borderRadius: 4,
-    elevation: 3,
-    backgroundColor: "#EF551D",
+    backgroundColor: "white",
   },
   submitReaction: {
     alignItems: 'flex-end',
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 4,
-    elevation: 3,
+    elevation: 10,
+    height : 41,
     backgroundColor: "#EF551D",
   },
   previousBtn: {
@@ -339,11 +341,15 @@ const styles = StyleSheet.create({
     backgroundColor: "#EF551D",
   },
   text: {
-    color: 'white',
+    color: "#EF551D",
     fontSize: 18
   },
   status: {
     fontSize: 15,
     color: 'gray'
+  },
+  text1 : {
+      color: "white",
+      fontSize: 15
   }
 })
