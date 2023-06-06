@@ -13,7 +13,10 @@ mutation Register($newUser: newUser) {
 }
 `;
 
+
 export default function RegisterForm() {
+    const [secure, setSecure] = useState(true)
+
     const [registerForm, setRegisterForm] = useState({
         "username": "",
         "phoneNumber": "",
@@ -30,6 +33,9 @@ export default function RegisterForm() {
             console.log(err, "error graph");
         }
     });
+    function visibilityHandle() {
+        setSecure(!secure)
+    }
 
     const onClick = async () => {
         try {
@@ -38,7 +44,7 @@ export default function RegisterForm() {
                     newUser: registerForm
                 }
             });
-            navigation.navigate('Profile')
+            navigation.navigate('Profiles')
             setRegisterForm({
                 "username": "",
                 "phoneNumber": "",
@@ -55,20 +61,20 @@ export default function RegisterForm() {
         <>
             <ImageBackground
                 source={{
-                    uri: 'https://images.unsplash.com/photo-1624957389019-0c814505746d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=682&q=80',
+                    uri: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fGZvb2R8ZW58MHwxfDB8fHww&auto=format&fit=crop&w=500&q=60',
                 }}
                 style={styles.imageBackground}
                 imageStyle={styles.image}
             >
                 <View style={styles.textButton}>
-                    <Text style={styles.textHeaders}>Buat akun barumu </Text>
+                    <Text style={{ ...styles.textHeaders, backgroundColor: 'rgba(245,94,0,1)', padding: 10, borderRadius: 15 }}>Buat akun barumu </Text>
                 </View>
                 <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,0)']}>
-                    <Image style={{ position: "absolute", width: "100%" }} source={require('../assets/Rectangle50.png')} />
-                    <View style={{ width: "80%" }}>
+                    <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: "90%" }}>
+
                         <View style={{ marginBottom: 20 }}>
                             <TextInput label="Name"
-                                left={<TextInput.Icon icon="email" />}
+                                left={<TextInput.Icon icon="account" />}
                                 mode="outlined"
                                 style={{ margin: 5, justifyContent: 'flex-start' }}
                                 onChangeText={(e) => onchange(e, 'username')} value={registerForm.username}
@@ -80,24 +86,25 @@ export default function RegisterForm() {
                                 onChangeText={(e) => onchange(e, 'email')} value={registerForm.email}
                             />
                             <TextInput label="Telpon"
-                                left={<TextInput.Icon icon="email" />}
+                                left={<TextInput.Icon icon="phone" />}
                                 mode="outlined"
                                 style={{ margin: 5, justifyContent: 'flex-start' }}
                                 onChangeText={(e) => onchange(e, 'phoneNumber')} value={registerForm.phoneNumber}
                             />
                             <TextInput label="Password"
-                                left={<TextInput.Icon icon="form-textbox-password" />}
+                                left={<TextInput.Icon icon="lock" />}
                                 mode="outlined"
-                                secureTextEntry={true}
+                                secureTextEntry={secure}
                                 style={{ margin: 5 }}
                                 onChangeText={(e) => onchange(e, 'password')} value={registerForm.password}
-                                right={<TextInput.Icon icon="eye" />}
+                                right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
                             />
                         </View>
                         <View style={styles.button}>
                             <Pressable style={styles.buttonn} onPress={onClick}>
                                 <Text style={styles.text}>Submit</Text>
                             </Pressable>
+
                         </View>
                     </View>
                 </LinearGradient>
@@ -158,7 +165,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     textHeaders: {
-        fontSize: 55,
+        fontSize: 35,
         justifyContent: "center",
         fontWeight: 'bold',
         color: 'white',

@@ -28,32 +28,32 @@ export default function TabScreen() {
                     tabBarLabel: 'HomeTab',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="home" color={color} size={size} />
-                        ),
-                    }}
+                    ),
+                }}
             />
             <Tab.Screen
                 name="Favorit"
                 component={Favorit}
                 options={{
-                    
+
                     tabBarLabel: 'Favorit',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="heart" color={color} size={size} />
-                        ),
-                    }}
+                    ),
+                }}
             />
-                       
+
             <Tab.Screen
                 name="FormAdd"
                 component={FormAdd}
                 options={{
-                    tabBarLabel: '',
+                    tabBarLabel: 'Add Recipe',
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesomeIcon icon={faPlus} color={color} size={size} />
                     ),
                 }}
             />
-            <Tab.Screen
+            {/* <Tab.Screen
                 name="Profile"
                 component={LoginForm}
                 options={{
@@ -63,7 +63,7 @@ export default function TabScreen() {
                         <MaterialCommunityIcons name="account" color={color} size={size} />
                     ),
                 }}
-            />
+            /> */}
             <Tab.Screen
                 name="Profiles"
                 component={Profil}

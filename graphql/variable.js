@@ -7,7 +7,7 @@ export const recipeForm = makeVar({
   "videoUrl": "",
   "origin": "",
   "portion": null,
-  "cookingTime": null,
+  "cookingTime": "",
   "ingredients": [
     {
       "name": "null"

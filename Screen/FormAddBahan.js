@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image, Button, Pressable, TextInput, ScrollView, Dimensions } from 'react-native'
+import { StyleSheet, Text, View, Image, Button, Pressable, TextInput, ScrollView, Dimensions, ImageBackground } from 'react-native'
 import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowRight, faCamera, faPlus } from '@fortawesome/free-solid-svg-icons'
@@ -65,7 +65,7 @@ export default function FormAddBahan() {
 
     const renderedIngredients = ingredients.map((value, index) => {
         return (
-            <TextInput key={index} style={styles.input} placeholder={'bahan ' + (+index + 1)} value={value.name} onChangeText={(e) => ingredientOnChangeHandle(index, e, 'name')} />
+            <TextInput key={index} style={styles.input} placeholder={"2 butir telur"} value={value.name} onChangeText={(e) => ingredientOnChangeHandle(index, e, 'name')} />
         );
     });
     const renderedSteps = steps.map((value, index) => {
@@ -113,37 +113,43 @@ export default function FormAddBahan() {
 
     return (
         <ScrollView>
-            <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
-                <Text style={styles.textHeaders}>Bahan - Bahan</Text>
-                {renderedIngredients}
-                <TouchableOpacity onPress={() => {
-                    setIngredients([...ingredients, { name: '' }])
-                }
+            <ImageBackground
+                source={require('../assets/elipse1.png')}
+                style={styles.imageBackground}
+            >
 
-                }>
-                    <Text style={styles.textplus} >+ Bahan</Text>
-                </TouchableOpacity>
-                <Text style={styles.textHeaders}>Langkah - Langkah</Text>
-                {renderedSteps}
-                <TouchableOpacity onPress={() => {
-                    setSteps([...steps, {
-                        image: "null",
-                        instruction: ""
-                    }])
-                }
-                }>
-                    <Text style={styles.textplus}>+ Langkah</Text>
-                </TouchableOpacity>
-                <Pressable style={styles.buttonn} onPress={() => {
-                    recipeForm({ ...recipeForm(), ingredients, steps })
-                    uploadRecipe()
-                    // console.log(recipeForm());
-                    navigation.navigate('HomeTab')
-                }
-                }>
-                    <Text style={styles.text}>Submit Recipe</Text>
-                </Pressable>
-            </View>
+                <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
+                    <Text style={styles.textHeaders}>Bahan - Bahan</Text>
+                    {renderedIngredients}
+                    <TouchableOpacity onPress={() => {
+                        setIngredients([...ingredients, { name: '' }])
+                    }
+
+                    }>
+                        <Text style={styles.textplus} >+ Bahan</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.textHeaders}>Langkah - Langkah</Text>
+                    {renderedSteps}
+                    <TouchableOpacity onPress={() => {
+                        setSteps([...steps, {
+                            image: "null",
+                            instruction: ""
+                        }])
+                    }
+                    }>
+                        <Text style={styles.textplus}>+ Langkah</Text>
+                    </TouchableOpacity>
+                    <Pressable style={styles.buttonn} onPress={() => {
+                        recipeForm({ ...recipeForm(), ingredients, steps })
+                        uploadRecipe()
+                        // console.log(recipeForm());
+                        navigation.navigate('HomeTab')
+                    }
+                    }>
+                        <Text style={styles.text}>Submit Recipe</Text>
+                    </Pressable>
+                </View>
+            </ImageBackground>
         </ScrollView>
     )
 }
@@ -210,6 +216,11 @@ const styles = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'gray',
-    }
+        color: 'black',
+    },
+    imageBackground: {
+        width: "100%",
+        height: '100%',
+        zIndex: -1
+    },
 })

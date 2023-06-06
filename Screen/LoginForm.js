@@ -1,5 +1,5 @@
 
-import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image, Dimensions } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -17,8 +17,11 @@ mutation Mutation($email: String, $password: String) {
 }
 `;
 
+const { width, height } = Dimensions.get('window')
+
 
 export default function LoginForm() {
+    const [secure, setSecure] = useState(true)
     const [uploadLogin, { data, loading, error }] = useMutation(getLogin, {
         onError: (err) => {
             console.log(err, "error graph");
@@ -40,7 +43,7 @@ export default function LoginForm() {
                 }
             });
             await AsyncStorage.setItem("access_token", data.login.access_token);
-            console.log(data.login.access_token);
+            console.log(data.login.access_token, 'accesstoken');
 
             setLoginForm({
                 email: '',
@@ -51,21 +54,24 @@ export default function LoginForm() {
             console.log(error.errors, "<---------");
         }
     };
+
+    function visibilityHandle() {
+        setSecure(!secure)
+    }
     return (
         <>
             <ImageBackground
                 source={{
-                    uri: 'https://images.unsplash.com/photo-1624957389019-0c814505746d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=682&q=80',
+                    uri: 'https://images.unsplash.com/photo-1555939594-58d7cb561ad1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8Zm9vZHxlbnwwfDF8MHx8fDA%3D&auto=format&fit=crop&w=500&q=60',
                 }}
                 style={styles.imageBackground}
                 imageStyle={styles.image}
             >
-                <View style={styles.textButton}>
-                    <Text style={styles.textHeaders}>Silahkan login </Text>
+                <View style={{ ...styles.textButton }}>
+                    <Text style={{ ...styles.textHeaders, backgroundColor: 'rgba(245,94,0,1)', padding: 10, borderRadius: 15 }}>Silahkan login</Text>
                 </View>
                 <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,0)']}>
-                    <Image style={{ position: "absolute", width: "100%" }} source={require('../assets/Rectangle50.png')} />
-                    <View style={{ width: "80%" }}>
+                    <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: '90%' }}>
                         <View style={{ marginBottom: 20 }}>
                             <TextInput label="Email"
                                 left={<TextInput.Icon icon="email" />}
@@ -73,12 +79,12 @@ export default function LoginForm() {
                                 style={{ margin: 10, justifyContent: 'flex-start' }}
                                 onChangeText={(e) => setLoginForm({ ...loginForm, email: e })} value={loginForm.email}
                             />
-                            <TextInput label="Password"
-                                left={<TextInput.Icon icon="form-textbox-password" />}
+                            <TextInput label="password"
+                                left={<TextInput.Icon icon="lock" />}
                                 mode="outlined"
-                                secureTextEntry={true}
+                                secureTextEntry={secure}
                                 style={{ margin: 10 }}
-                                right={<TextInput.Icon icon="eye" />}
+                                right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
                                 onChangeText={(e) => setLoginForm({ ...loginForm, password: e })} value={loginForm.password}
                             />
                         </View>
@@ -89,12 +95,12 @@ export default function LoginForm() {
                         </View>
                         <View style={styles.button}>
                             <Pressable style={styles.buttonn2} onPress={() => navigation.navigate('RegisterForm')}>
-                                <Text style={styles.text1}>Don't have account? click here</Text>
+                                <Text style={styles.text1}>Don't have account?</Text>
                             </Pressable>
                         </View>
                     </View>
                 </LinearGradient>
-            </ImageBackground>
+            </ImageBackground >
         </>
     );
 };

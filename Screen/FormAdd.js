@@ -1,13 +1,15 @@
-import { StyleSheet, Text, View, TextInput, Image, Button, Pressable, ScrollView, Platform, TouchableOpacity, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, TextInput, Image, Button, Pressable, ScrollView, Platform, TouchableOpacity, ActivityIndicator, ImageBackground } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowRight, faCamera } from '@fortawesome/free-solid-svg-icons'
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import ReactNativeFile from "apollo-upload-client/public/ReactNativeFile.js";
 import { useMutation, gql, useReactiveVar } from '@apollo/client';
 import { recipeForm } from '../graphql/variable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+
 
 
 
@@ -19,11 +21,11 @@ const mutationUpload = gql`
 }
 `;
 
-let access_token = ""
-AsyncStorage.getItem("access_token").then((value) => { access_token = value })
-
 export default function FormAdd() {
   const [image, setImage] = useState(null);
+  const isfocused = useIsFocused()
+  const [access_token, setAccessToken] = useState("");
+  const navigation = useNavigation()
   const [form, setForm] = useState({
     "title": "",
     "image": [],
@@ -44,7 +46,7 @@ export default function FormAdd() {
       }
     ],
   })
-  const navigation = useNavigation();
+
 
   useEffect(() => {
     (async () => {
@@ -56,6 +58,16 @@ export default function FormAdd() {
       }
     })();
   }, []);
+
+  useEffect(() => {
+    AsyncStorage.getItem("access_token")
+      .then(value => {
+        setAccessToken(value || "");
+      })
+      .catch(error => {
+        console.error("Error retrieving access token:", error);
+      });
+  }, [isfocused]);
 
   const [uploadForm, { data, loading, error }] = useMutation(mutationUpload, {
     onError: (err) => {
@@ -120,50 +132,63 @@ export default function FormAdd() {
   };
 
 
-  // if (!access_token) {
-  //   return (
-  //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-  //       <Text>belum login, login dulu</Text>
-  //     </View>
-  //   )
-  // }
-
   if (loading) return <ActivityIndicator size="large" />
+
+  if (!access_token) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <Text>belum login, login dulu</Text>
+        <Pressable
+          style={{ ...styles.button, marginTop: 10 }}
+          onPress={() => navigation.navigate('Profiles')}
+        >
+          <Text style={styles.text}><MaterialCommunityIcons name="login" color={"#ffffff"} size={21} />  Login</Text>
+        </Pressable>
+      </View>
+    )
+  }
 
   return (
     <ScrollView>
-      <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
-        <View>
-          <TouchableOpacity onPress={pickImage}>
-            {image ? <Image
-              source={{ uri: image.uri }}
-              style={{ width: 320, height: 200, borderRadius: 30, zIndex: -1, marginBottom: 10 }}
-            /> :
-              <>
-                <Image
-                  source={{ uri: "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg" }}
-                  style={{ width: 320, height: 200, opacity: 0.4, borderRadius: 30, zIndex: -1, marginBottom: 10 }}
-                />
-                <Text style={{ position: "absolute", marginTop: 175, marginLeft: 90, color: "black" }}> <FontAwesomeIcon icon={faCamera} style={{ color: "black", }} /> UPLOAD PHOTO</Text>
-              </>
-            }
+      <ImageBackground
+        source={require('../assets/vectorOren.png')}
+        style={{ ...styles.imageBackground }}
+      >
 
-          </TouchableOpacity>
+
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
+          <View style={{ paddingTop: 20 }}>
+            <TouchableOpacity onPress={pickImage}>
+              {image ? <Image
+                source={{ uri: image.uri }}
+                style={{ width: 320, height: 200, borderRadius: 30, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
+              /> :
+                <>
+                  <Image
+                    source={{ uri: "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg" }}
+                    style={{ width: 320, height: 200, opacity: 0.4, borderRadius: 30, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
+                  />
+                  <Text style={{ position: "absolute", marginTop: 175, marginLeft: 90, color: "black" }}> <FontAwesomeIcon icon={faCamera} style={{ color: "black", }} /> UPLOAD PHOTO</Text>
+                </>
+              }
+
+            </TouchableOpacity>
+          </View>
+          <TextInput style={styles.input} placeholder="Name Recipes" onChangeText={(e) => onchange(e, 'title')} value={form.title} />
+          <TextInput style={styles.input} multiline={true} placeholder="Cerita di balik masakan ini, Apa atau siapa yang menginspirasimu? Apa yang membuatnya istimewa? Bagaimana caramu menikmatinya" onChangeText={(e) => onchange(e, 'description')} value={form.description} />
+          <TextInput style={styles.input} placeholder="Daerah asal" onChangeText={(e) => onchange(e, 'origin')} value={form.origin} />
+          <TextInput style={styles.input} placeholder="Porsi" onChangeText={(e) => onchange(e, 'portion')} value={form.portion + ""} />
+          <TextInput style={styles.input} placeholder="Lama memasak" onChangeText={(e) => onchange(e, 'cookingTime')} value={form.cookingTime} />
+          <TextInput style={styles.input} placeholder="Video URL" onChangeText={(e) => onchange(e, 'videoUrl')} value={form.videoUrl} />
+          <Pressable style={{ ...styles.buttonn, }} onPress={() => {
+            navigation.navigate('FormAddBahan')
+            recipeForm({ ...recipeForm(), ...form })
+
+          }}>
+            <Text style={styles.text}>Bahan & Langkah <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff", }} /></Text>
+          </Pressable>
         </View>
-        <TextInput style={styles.input} placeholder="Name Recipes" onChangeText={(e) => onchange(e, 'title')} value={form.title} />
-        <TextInput style={styles.input} multiline={true} placeholder="Cerita di balik masakan ini, Apa atau siapa yang menginspirasimu? Apa yang membuatnya istimewa? Bagaimana caramu menikmatinya" onChangeText={(e) => onchange(e, 'description')} value={form.description} />
-        <TextInput style={styles.input} placeholder="Daerah asal" onChangeText={(e) => onchange(e, 'origin')} value={form.origin} />
-        <TextInput style={styles.input} placeholder="Porsi" onChangeText={(e) => onchange(e, 'portion')} value={form.portion + ""} />
-        <TextInput style={styles.input} placeholder="Lama memasak" onChangeText={(e) => onchange(e, 'cookingTime')} value={form.cookingTime} />
-        <TextInput style={styles.input} placeholder="Video URL" onChangeText={(e) => onchange(e, 'videoUrl')} value={form.videoUrl} />
-        <Pressable style={styles.buttonn} onPress={() => {
-          navigation.navigate('FormAddBahan')
-          recipeForm({ ...recipeForm(), ...form })
-          // uploadImage()
-        }}>
-          <Text style={styles.text}>Bahan & Langkah <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff", }} /></Text>
-        </Pressable>
-      </View>
+      </ImageBackground>
     </ScrollView>
   )
 }
@@ -197,5 +222,26 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: 'white',
+  },
+  imageBackground: {
+    width: "100%",
+    height: '85%',
+    zIndex: -1
+  },
+  button: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 4,
+    elevation: 3,
+    backgroundColor: "#EF551D",
+  },
+  text: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
   },
 })

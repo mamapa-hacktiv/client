@@ -1,64 +1,119 @@
-import { StyleSheet, Text, View, Dimensions, ScrollView, ImageBackground, Image, FlatList } from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Dimensions, ScrollView, ImageBackground, Image, FlatList, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faFile, faSignOut } from '@fortawesome/free-solid-svg-icons'
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import LoginForm from './LoginForm'
+import { gql, useQuery } from '@apollo/client';
+
+
 
 const { width, height } = Dimensions.get('window')
 
-const data = [
-    {
-        title: 'nasi padang'
-    },
-    {
-        title: 'nasi padang'
-    },
-    {
-        title: 'nasi padang'
-    },
-    {
-        title: 'nasi padang'
-    }
-]
+const GetUser = gql`
+query GetUser {
+  getUser {
+    email
+    id
+    username
+    phoneNumber
+  }
+}
+`;
+const FindMyRecipes = gql`
+query FindMyRecipes {
+  findMyRecipes {
+    id
+    image
+    title
+  }
+}
+`;
+
+
 
 export default function Profil() {
-    return (
-        <SafeAreaView>
-            <ImageBackground
-                source={require('../assets/vectorOren.png')}
-                style={styles.imageBackground}
-                imageStyle={styles.image}
-            >
-                <View style={styles.container}>
-                    <Text style={styles.header}>Profil</Text>
-                    <View style={styles.profilContainer}>
-                        <View style={styles.user}>
-                            <Text style={styles.name}>Anggit Saepul Anwar</Text>
-                            <Text style={styles.email}>anggitsaeful382@gmail.com</Text>
-                            <Text style={styles.email}>085941310965</Text>
+    const [access_token, setAccessToken] = useState("");
+    const isfocused = useIsFocused()
+    const navigation = useNavigation();
+    const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
+    const { loading, error, data, refetch: refetchData } = useQuery(FindMyRecipes);
+
+    console.log(data);
+    useEffect(() => {
+        AsyncStorage.getItem("access_token")
+            .then(value => {
+                setAccessToken(value || "");
+            })
+            .catch(error => {
+                console.error("Error retrieving access token:", error);
+            });
+
+    }, [isfocused]);
+
+    useEffect(() => {
+        refetchUser()
+        refetchData()
+    }, [access_token]);
+
+
+    if (access_token) {
+        return (
+            <SafeAreaView>
+                <ImageBackground
+                    source={require('../assets/vectorOren.png')}
+                    style={styles.imageBackground}
+                    imageStyle={styles.image}
+                >
+                    <View style={styles.container}>
+                        <Text style={styles.header}>Profil</Text>
+                        <View style={styles.profilContainer}>
+                            {dataUser && <View style={styles.user}>
+                                <Text style={styles.name}>{dataUser.getUser ? dataUser.getUser.username : ''}</Text>
+                                <Text style={styles.email}>{dataUser.getUser ? dataUser.getUser.email : ''}</Text>
+                                <Text style={styles.email}>{dataUser.getUser ? dataUser.getUser.phoneNumber : ''}</Text>
+                            </View>}
+                            <View style={{ ...styles.SignOut }}>
+                                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={async () => {
+                                    try {
+                                        await AsyncStorage.removeItem("access_token");
+                                        navigation.navigate('HomeTab')
+                                    } catch (error) {
+                                        console.error(`Error removing access_token from AsyncStorage:`, error);
+                                    }
+                                }}>
+                                    <FontAwesomeIcon icon={faSignOut} color='#EF551D' size={20}> </FontAwesomeIcon>
+                                    <Text style={styles.textIcon}>  Sign Out </Text>
+                                </TouchableOpacity>
+                            </View>
+                            <Image style={{ width: '100%' }} source={require('../assets/vectorline.png')}></Image>
+                            <View style={styles.SignOut}>
+                                <FontAwesomeIcon icon={faFile} color='#EF551D' size={20}> </FontAwesomeIcon>
+                                <Text style={styles.textIcon}>  Resep Saya </Text>
+                            </View>
+
+                            {data ? <FlatList data={data.findMyRecipes} numColumns={2}
+                                renderItem={({ item }) => {
+                                    return <View style={styles.cardContainer}>
+                                        <Image style={styles.photo} source={{ uri: item.image }} />
+                                        <Text style={styles.title}>{item.title}</Text>
+                                    </View>
+                                }}
+                            /> : <></>}
+
                         </View>
-                        <View style={styles.SignOut}>
-                            <FontAwesomeIcon icon={faSignOut} color='#EF551D' size={20}> </FontAwesomeIcon>
-                            <Text style={styles.textIcon}>  Sign Out </Text>
-                        </View>
-                        <Image style={{ width: '100%' }} source={require('../assets/vectorline.png')}></Image>
-                        <View style={styles.SignOut}>
-                            <FontAwesomeIcon icon={faFile} color='#EF551D' size={20}> </FontAwesomeIcon>
-                            <Text style={styles.textIcon}>  Resep Saya </Text>
-                        </View>
-                        <FlatList data={data} numColumns={2}
-                            renderItem={({ item }) => {
-                                return <View style={styles.cardContainer}>
-                                    <Image style={styles.photo} source={{ uri: "https://media.istockphoto.com/id/1144681924/id/foto/nasi-padang-dengan-ayam-cabai-hijau-nasi-padang.jpg?s=170667a&w=0&k=20&c=-D3GVhmmDexjYSl6eWUdP3UgGcmKzb3j7dGLYyIGuP8=" }} />
-                                    <Text style={styles.title}>Nasi Padang</Text>
-                                </View>
-                            }}
-                        />
                     </View>
-                </View>
-            </ImageBackground>
-        </SafeAreaView>
-    )
+                </ImageBackground>
+            </SafeAreaView>
+        )
+    } else {
+        return <LoginForm />
+    }
+
+
+
 }
 
 const styles = StyleSheet.create({
@@ -86,7 +141,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
     },
-    textIcon : {
+    textIcon: {
         fontWeight: '500',
         fontSize: 15,
     },
@@ -108,16 +163,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     cardContainer: {
-        overflow: "hidden",
-        marginBottom: 20,
+        padding: 15,
         borderColor: '#cccccc',
-        marginLeft : 5,
-        marginRight : 5,
-        borderWidth: 0.5,
-        borderRadius: 20,
-        width : 135,
-        alignItems : 'center',
-        justifyContent : 'space-between'
+        alignItems: 'center'
     },
     photo: {
         width: "100%",
@@ -125,8 +173,8 @@ const styles = StyleSheet.create({
         height: 100,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
-        resizeMode : 'center',
-        borderRadius : 15
+        resizeMode: 'center',
+        borderRadius: 15
     },
 
 
