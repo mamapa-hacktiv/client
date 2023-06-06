@@ -1,10 +1,12 @@
-import { Dimensions, Text, TextInput, View, VirtualizedList, StyleSheet, TouchableOpacity, ScrollView, FlatList } from "react-native";
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator} from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowLeft, faBars, faCircleXmark, faFilter, faGripLinesVertical, faSortDown } from "@fortawesome/free-solid-svg-icons";
+import { faArrowLeft, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
+import { gql, useQuery } from '@apollo/client';
+
 
 const { width, height } = Dimensions.get('window')
 
@@ -15,6 +17,74 @@ const labels = [
   'Beri perasa',
   'Sajikan',
 ]
+
+const FindRecipe = gql`
+query FindRecipe($findRecipeId: ID!) {
+  findRecipe(id: $findRecipeId) {
+    id
+    title
+    image
+    description
+    videoUrl
+    origin
+    portion
+    cookingTime
+    UserId
+    Reactions {
+      id
+      emoji
+      quantity
+      RecipeId
+      UserId
+      createdAt
+      updatedAt
+    }
+    Steps {
+      id
+      instruction
+      image
+      RecipeId
+      createdAt
+      updatedAt
+    }
+    Comments {
+      id
+      message
+      RecipeId
+      UserId
+      User {
+        id
+        username
+        email
+        password
+        phoneNumber
+        createdAt
+        updatedAt
+      }
+      createdAt
+      updatedAt
+    }
+    Ingredients {
+      id
+      name
+      RecipeId
+      createdAt
+      updatedAt
+    }
+    User {
+      id
+      username
+      email
+      password
+      phoneNumber
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
 
 const customStyles = {
   stepIndicatorSize: 25,
@@ -37,7 +107,13 @@ const customStyles = {
   currentStepLabelColor: '#ff3232',
 };
 
-export default function DetailPage() {
+export default function DetailPage({ route }) {
+  const { loading, error, data: detailvalue, refetch } = useQuery(FindRecipe, {
+    variables: {
+      findRecipeId : route.params.id
+    }
+  });
+
   const [currentPosition, setCurrentPosition] = useState(0)
 
   const nextStep = () => {
@@ -47,7 +123,7 @@ export default function DetailPage() {
   const previouseStep = () => {
     setCurrentPosition(currentPosition - 1)
   }
-  const data = [
+  const value = [
     {
       label: 'Step 1',
       status: 'Cuci beras hingga bersih lalu tiriskan'
@@ -79,66 +155,97 @@ export default function DetailPage() {
     { ingredients: '2 thin slices of galangal (Indonesian: lengkuas)' },
     { ingredients: '1 teaspoon coriander powder (Indonesian: bubuk ketumbar)' },
   ]
-  return (
-    <>
-      <ScrollView>
-        <SafeAreaView>
-          <View>
-            <YoutubePlayer
-              height={250}
-              play={true}
-              videoId={"esPA5B5nVH8"}
-            />
-          </View>
 
-          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
-          <View style={styles.ingridientsContainer}>
-            <View style={{ padding: 20 }}>
-              {ingredient.map((item, index) => {
-                return (
-                  <View key={index} style={{ marginBottom: 5 }}>
-                    <Text style={{ fontSize: 14 }}>{`\u2022 ${item.ingredients}`}</Text>
-                  </View>
-                );
-              })}
+  function videoUrlValue(url) {
+      const regex = /[?&]v=([^&#]*)/;
+      const match = regex.exec(url);
+      if (match && match[1]) {
+        return match[1];
+      } else {
+        return null;
+       }
+  }
+
+
+ if (detailvalue){
+    return (
+      <>
+        <ScrollView>
+       
+            <View>
+              <YoutubePlayer
+                height={210}
+                play={true}
+                videoId={videoUrlValue(detailvalue.findRecipe.videoUrl)}
+              />
             </View>
-          </View>
-          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Steps</Text>
-          <View style={styles.indicatorContainer}>
-            <StepIndicator
-              customStyles={customStyles}
-              currentPosition={currentPosition}
-              labels={labels}
-              direction="vertical"
-              renderLabel={({ position, stepStaus, label, crntPosition }) => {
-                return (
-                  <View style={styles.lblcontainer}>
-                    <Text style={styles.lbltext}> {data[position].label}</Text>
-                    <Text style={[styles.status, { marginTop: 5 }]}> {data[position].status}</Text>
-                  </View>
-                )
-              }}
-            />
-            <View style={{ flexDirection: 'row', gap: 80 }}>
-              <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
-                <Text style={styles.text}>Previous</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
-                <Text style={styles.text}>Next</Text>
+            <View style={{ marginLeft : 20, margin : 14}}>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >{detailvalue.findRecipe.title}</Text>
+            <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B'}} >by {detailvalue.findRecipe.User.username}</Text>
+            <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B'}} ><FontAwesomeIcon icon={faClock} color="#5B5B5B" size={10}></FontAwesomeIcon> {detailvalue.findRecipe.cookingTime}</Text>
+            </View>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Ingredients</Text>
+            <View style={styles.ingridientsContainer}>
+              <View style={{ padding: 20 }}>
+                {detailvalue.findRecipe.Ingredients.map((item, index) => {
+                  return (
+                    <View key={index} style={{ marginBottom : 10}}>
+                      <Text style={{ fontSize: 14 }}>{`\u2022 ${item.name}`}</Text>
+                    </View>
+                  );
+                })}
+              </View>
+            </View>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Steps</Text>
+            <View style={styles.indicatorContainer}>
+              <StepIndicator
+                customStyles={customStyles}
+                currentPosition={currentPosition}
+                labels={labels}
+                direction="vertical"
+                renderLabel={({ position, stepStaus, label, crntPosition }) => {
+                  return (
+                    <View style={styles.lblcontainer}>
+                      <Text style={styles.lbltext}> {value[position].label}</Text>
+                      <Text style={[styles.status, { marginTop: 5 }]}> {value[position].status}</Text>
+                    </View>
+                  )
+                }}
+              />
+              <View style={{ flexDirection: 'row', gap: 80 }}>
+                <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
+                  <Text style={styles.text}>Previous</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
+                  <Text style={styles.text}>Next</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Comments</Text>
+            <View style={styles.reactionContainer}>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Marsh</Text>
+            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Resep ini sangat bermanfaat bagiku</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Bunny</Text>
+            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Terimakasih resep nya</Text>
+            <View style={{flexDirection: 'row', gap :7, marginTop: 10}} >
+              <TextInput style={styles.input} placeholder="Comments" />
+              <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
+                <Text style={styles.text}>Submit</Text>
               </TouchableOpacity>
             </View>
-          </View>
-          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Reaction</Text>
-          <View style={styles.reactionContainer}>
-            <TextInput style={styles.input} placeholder="Comments" />
-            <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
-              <Text style={styles.text}>Submit</Text>
-            </TouchableOpacity>
-          </View>
-        </SafeAreaView>
-      </ScrollView>
-    </>
+            </View>
+       
+        </ScrollView>
+      </>
+    )
+     
+  } else {
+      return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <ActivityIndicator size="large" />
+      </View>
   )
+  }
 }
 
 
@@ -193,7 +300,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 20,
     backgroundColor: 'white',
-    flexDirection: 'row',
+    
     gap: 5
   },
   lblcontainer: {

@@ -118,37 +118,39 @@ export default function HomePage() {
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
         <View style={{ flex: 2, height: 300 }}>
-          {getRandomElementsFromArray(data.findRecipes, 4).length > 0 &&
+          {
+          getRandomElementsFromArray(data.findRecipes, 4).length > 0 &&
             <Carousel
               data={getRandomElementsFromArray(data.findRecipes, 4)}
               renderItem={(item, index) => (
-                <Pressable key={index} onPress={() => navigation.navigate('DetailPage', { id: item.id })}>
+                <Pressable key={index} onPress={() => navigation.navigate('Detail', { id: item.id })}>
                   <View
                     key={index}
                     style={{
                       height: 250, position: 'relative',
                       width: DEVICE_WIDTH,
-
-
                     }}
                     colors={['green', 'red']}>
                     <View style={{ position: 'absolute', zIndex: 3, bottom: 20, marginLeft: 20, }}>
                       <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white', elevation: 100 }} >{item.title}</Text>
                       <Text style={styles.textTime} ><FontAwesomeIcon icon={faClock} color={"white"}></FontAwesomeIcon> {item.cookingTime}</Text>
                     </View>
+                    <LinearGradient style={{position : 'absolute',height: 310, width : DEVICE_WIDTH , top : 0, left : 0}} colors={['transparent', 'rgba(0,0,0,0.8)']}/>
                     <Image
                       src={item.image}
                       style={{
                         height: 310,
                         width: DEVICE_WIDTH,
                         resizeMode: "cover",
-                        position: "relative"
+                        position: "relative",
+                        zIndex : -1
                       }}
-                    />
+                      />
                   </View>
                 </Pressable>
               )}
-            />}
+            />
+            }
           <Image style={{ position: "absolute", marginTop: 220, width: "100%" }} source={require('../assets/vector12.png')} />
         </View>
         <View style={{ flex: 3, backgroundColor: 'white' }}>
@@ -172,7 +174,7 @@ export default function HomePage() {
           {data.findRecipes && <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
             {data.findRecipes.map((el, index) => {
               return (
-                <Pressable key={index} onPress={() => navigation.navigate('DetailPage', { id: el.id })} >
+                <Pressable key={index} onPress={() => navigation.navigate('Detail', { id: el.id })} >
 
                   <View style={styles.container}>
 
@@ -212,6 +214,10 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
   },
+  overlay: {
+    flex: 1,
+    alignItems : 'center'
+},
   title: {
     fontSize: 13,
     fontWeight: 'bold',

@@ -50,12 +50,15 @@ export default function Favorit() {
     if (!access_token) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <Text>belum login, login dulu</Text>
+             <Image style={{ width : 300, height :200, }} source={require('../assets/ilustratorlogin.png')}>
+             </Image>
+                <Text style={{ fontWeight: '200'}}> Maaf! kamu harus login ke akun kamu terlebih dahulu</Text>
+
                 <Pressable
                     style={{ ...styles.button, marginTop: 10 }}
                     onPress={() => navigation.navigate('Profiles')}
                 >
-                    <Text style={styles.text}><MaterialCommunityIcons name="login" color={"#ffffff"} size={21} />  Login</Text>
+                    <Text style={styles.text}><MaterialCommunityIcons name="login" color={"#ffffff"} size={15} />  Login</Text>
                 </Pressable>
             </View>
         )
@@ -84,7 +87,7 @@ export default function Favorit() {
                         {data.findFavorite ? <FlatList data={data.findFavorite} numColumns={2}
                             renderItem={({ item }) => {
                                 return (
-                                    <Pressable style={styles.container} key={item.Recipe.id} onPress={() => navigation.navigate('DetailPage', { id: item.Recipe.id })} >
+                                    <Pressable style={styles.container} key={item.Recipe.id} onPress={() => navigation.navigate('Detail', { id: item.Recipe.id })} >
 
                                         <Image style={styles.photo} source={{ uri: item.Recipe.image }} />
                                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -141,14 +144,14 @@ const styles = StyleSheet.create({
     button: {
         alignItems: "center",
         justifyContent: "center",
-        paddingVertical: 14,
-        paddingHorizontal: 20,
+        paddingVertical:7 ,
+        paddingHorizontal: 15,
         borderRadius: 4,
         elevation: 3,
         backgroundColor: "#EF551D",
     },
     text: {
-        fontSize: 16,
+        fontSize: 14,
         lineHeight: 21,
         fontWeight: "bold",
         letterSpacing: 0.25,

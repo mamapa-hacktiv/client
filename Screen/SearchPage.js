@@ -88,7 +88,7 @@ export default function SearchPage() {
 
                 {data && data.recipeSearch.map(el => {
                   return (
-                    <Pressable key={el.id} onPress={() => navigation.navigate('DetailPage', { id: el.id })}>
+                    <Pressable key={el.id} onPress={() => navigation.navigate('Detail', { id: el.id })}>
                       <View style={{ height: 140, backgroundColor: 'white', elevation: 3, borderRadius: 15, borderColor: '#CACECF', borderWidth: 1, flexDirection: 'row', padding: 10, gap: 15 }}>
                         <View style={{ flex: 1.5, justifyContent: 'center', alignItems: 'center' }}>
                           <Image
