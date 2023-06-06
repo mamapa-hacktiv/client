@@ -106,7 +106,7 @@ export default function FormAddBahan() {
     //   };
 
 
-
+    console.log(loading, 'ini loading juga');
 
     if (loading) return <ActivityIndicator size="large" />
 
@@ -141,9 +141,10 @@ export default function FormAddBahan() {
                     </TouchableOpacity>
                     <Pressable style={styles.buttonn} onPress={() => {
                         recipeForm({ ...recipeForm(), ingredients, steps })
-                        uploadRecipe()
+                        console.log(loading, 'ini loading');
+                        // uploadRecipe()
                         // console.log(recipeForm());
-                        navigation.navigate('HomeTab')
+                        // navigation.navigate('HomeTab')
                     }
                     }>
                         <Text style={styles.text}>Submit Recipe</Text>

@@ -1,11 +1,11 @@
-import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator, Pressable} from "react-native";
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Pressable } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 
@@ -19,6 +19,25 @@ const labels = [
   'Sajikan',
 ]
 
+const deleteFavorite = gql`
+mutation DeleteFavorite($favoriteId: ID) {
+  deleteFavorite(favoriteId: $favoriteId) {
+    message
+  }
+}
+`;
+const CreateFavorite = gql`
+mutation CreateFavorite($recipeId: ID) {
+  createFavorite(recipeId: $recipeId) {
+    message
+  }
+}
+`;
+const isFavorite = gql`
+query Query($recipeId: ID) {
+  isFavorite(recipeId: $recipeId)
+}
+`;
 const FindRecipe = gql`
 query FindRecipe($findRecipeId: ID!) {
   findRecipe(id: $findRecipeId) {
@@ -112,7 +131,22 @@ export default function DetailPage({ route }) {
   const [isfavorit, setIsFavorit] = useState(false)
   const { loading, error, data: detailvalue, refetch } = useQuery(FindRecipe, {
     variables: {
-      findRecipeId : route.params.id
+      findRecipeId: route.params.id
+    }
+  });
+  const { loading: loadingFavorite, error: errorFavorite, data: dataFavorite, refetch: refetchFavorite } = useQuery(isFavorite, {
+    variables: {
+      recipeId: route.params.id
+    }
+  });
+  const [deleteFavorites, { data: dataDelete, loading: loadingDelete, error: errorDelete }] = useMutation(deleteFavorite, {
+    onError: (err) => {
+      console.log(err, "error graph");
+    }
+  });
+  const [createFavorites, { data: dataCreate, loading: loadingCreate, error: errorCreate }] = useMutation(CreateFavorite, {
+    onError: (err) => {
+      console.log(err, "error graph");
     }
   });
 
@@ -159,103 +193,119 @@ export default function DetailPage({ route }) {
   ]
 
   function videoUrlValue(url) {
-      const regex = /[?&]v=([^&#]*)/;
-      const match = regex.exec(url);
-      if (match && match[1]) {
-        return match[1];
-      } else {
-        return null;
-       }
+    const regex = /[?&]v=([^&#]*)/;
+    const match = regex.exec(url);
+    if (match && match[1]) {
+      return match[1];
+    } else {
+      return null;
+    }
   }
 
+  function favorite(id) {
+    if (dataFavorite.isFavorite) {
+      return <FontAwesomeIcon icon={faHeart} beat size={35} color={'#EB5757'} />
+    } else {
+      return <FontAwesomeIcon icon={faHeart} beat size={35} color={'gray'} />
+    }
+  }
 
- if (detailvalue){
+  if (detailvalue) {
     return (
       <>
         <ScrollView>
-       
-            <View>
-              <YoutubePlayer
-                height={210}
-                play={true}
-                videoId={videoUrlValue(detailvalue.findRecipe.videoUrl)}
-              />
+          <View>
+            <YoutubePlayer
+              height={210}
+              play={false}
+              videoId={videoUrlValue(detailvalue.findRecipe.videoUrl)}
+            />
+          </View>
+          <View style={{ marginLeft: 20, margin: 14 }}>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >{detailvalue.findRecipe.title}</Text>
+            <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B' }} >by {detailvalue.findRecipe.User.username}</Text>
+            <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B' }} ><FontAwesomeIcon icon={faClock} color="#5B5B5B" size={10}>   </FontAwesomeIcon> {detailvalue.findRecipe.cookingTime}</Text>
+            <Pressable style={{ zIndex: 1, position: 'absolute', marginTop: 10, alignSelf: 'flex-end', paddingRight: 10 }} onPress={() => {
+              if (dataFavorite.isFavorite) {
+                deleteFavorites({
+                  variables: {
+                    favoriteId: null
+                  }
+                })
+                refetchFavorite()
+              } else {
+                createFavorites({
+                  variables: {
+                    recipeId: detailvalue.findRecipe.id
+                  }
+                })
+                refetchFavorite()
+              }
+            }}>
+              <FontAwesomeIcon icon={faHeart} beat size={35} color={isfavorit ? '#EB5757' : 'gray'} />
+            </Pressable>
+          </View>
+          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Bahan - bahan</Text>
+          <View style={styles.ingridientsContainer}>
+            <View style={{ padding: 20 }}>
+              {detailvalue.findRecipe.Ingredients.map((item, index) => {
+                return (
+                  <View key={index} style={{ marginBottom: 10 }}>
+                    <Text style={{ fontSize: 14 }}>{`\u2022 ${item.name}`}</Text>
+                  </View>
+                );
+              })}
             </View>
-            <View style={{ marginLeft : 20, margin : 14}}>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >{detailvalue.findRecipe.title}</Text>
-            <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B'}} >by {detailvalue.findRecipe.User.username}</Text>
-            <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B'}} ><FontAwesomeIcon icon={faClock} color="#5B5B5B" size={10}></FontAwesomeIcon> {detailvalue.findRecipe.cookingTime}</Text>
-            <Pressable style={{ zIndex : 1 , position : 'absolute',marginTop : 10, alignSelf : 'flex-end', paddingRight : 10 }} onPress={() => {
-                      if(isfavorit){
-                        setIsFavorit(false)
-                      }else{
-                        setIsFavorit(true)
-                      }
-                    }}>
-                    <FontAwesomeIcon icon={faHeart} beat size={35}  color={isfavorit ? '#EB5757' : 'gray' } />
-                    </Pressable>
-            </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Bahan - bahan</Text>
-            <View style={styles.ingridientsContainer}>
-              <View style={{ padding: 20 }}>
-                {detailvalue.findRecipe.Ingredients.map((item, index) => {
-                  return (
-                    <View key={index} style={{ marginBottom : 10}}>
-                      <Text style={{ fontSize: 14 }}>{`\u2022 ${item.name}`}</Text>
-                    </View>
-                  );
-                })}
-              </View>
-            </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Langkah - langkah</Text>
-            <View style={styles.indicatorContainer}>
-              <StepIndicator
-                customStyles={customStyles}
-                currentPosition={currentPosition}
-                labels={labels}
-                direction="vertical"
-                renderLabel={({ position, stepStaus, label, crntPosition }) => {
-                  return (
-                    <>
+          </View>
+          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Langkah - langkah</Text>
+          <View style={styles.indicatorContainer}>
+            <StepIndicator
+              customStyles={customStyles}
+              currentPosition={currentPosition}
+              labels={labels}
+              direction="vertical"
+              renderLabel={({ position, stepStaus, label, crntPosition }) => {
+                return (
+                  <>
                     <View style={styles.lblcontainer}>
                       <Text style={styles.lbltext}> {value[position].label}</Text>
                       <Text style={[styles.status, { marginTop: 5 }]}> {value[position].status}</Text>
                     </View>
-                    <View style={{alignSelf : 'flex-start'}}>
+                    <View style={{ alignSelf: 'flex-start' }}>
                       <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
                         <Text style={styles.text}>Next <FontAwesomeIcon icon={faCircleRight} color="#EF551D" size={15}></FontAwesomeIcon></Text>
                       </TouchableOpacity>
                     </View>
-                    </>
-                  )
-                }}
-              />
-             
-            </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Komentar</Text>
-            <View style={styles.reactionContainer}>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Marsh</Text>
-            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Resep ini sangat bermanfaat bagiku</Text>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Bunny</Text>
-            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Terimakasih resep nya</Text>
-            <View style={{flexDirection: 'row', gap :7, marginTop: 10}} >
+                  </>
+                )
+              }}
+            />
+
+          </View>
+          <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Komentar</Text>
+          <View style={styles.reactionContainer}>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >Marsh</Text>
+            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light" }} >Komentar : Resep ini sangat bermanfaat bagiku</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >Bunny</Text>
+            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light" }} >Komentar : Terimakasih resep nya</Text>
+            <View style={{ flexDirection: 'row', gap: 7, marginTop: 10 }} >
               <TextInput style={styles.input} placeholder="keren" />
               <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
                 <Text style={styles.text1}>Submit</Text>
               </TouchableOpacity>
             </View>
-            </View>
-       
+          </View>
+
         </ScrollView>
       </>
     )
-     
+
   } else {
-      return (
+    return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" />
       </View>
-  )
+    )
   }
 }
 
@@ -270,7 +320,7 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     elevation: 3,
     width: "65%",
-    height : 40,
+    height: 40,
     backgroundColor: "#EDEDED",
   },
   hr: {
@@ -312,7 +362,7 @@ const styles = StyleSheet.create({
     elevation: 10,
     borderRadius: 20,
     backgroundColor: 'white',
-    
+
     gap: 5
   },
   lblcontainer: {
@@ -328,7 +378,7 @@ const styles = StyleSheet.create({
   },
   nextBtn: {
     alignItems: 'flex-start',
-    paddingVertical:5 ,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 4,
     backgroundColor: "white",
@@ -339,7 +389,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 25,
     borderRadius: 4,
     elevation: 10,
-    height : 41,
+    height: 41,
     backgroundColor: "#EF551D",
   },
   previousBtn: {
@@ -358,8 +408,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: 'gray'
   },
-  text1 : {
-      color: "white",
-      fontSize: 15
+  text1: {
+    color: "white",
+    fontSize: 15
   }
 })

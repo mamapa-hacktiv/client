@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation, gql, useReactiveVar } from '@apollo/client';
+import { ActivityIndicator } from 'react-native-paper';
 
 const { width, height } = Dimensions.get('window')
 
@@ -34,17 +35,20 @@ export default function AIPage() {
 
 
   const rederedChats = chats.map((value, index) => {
+    console.log(loading, value.bot);
     return (
       <View key={index}>
         <View style={styles.buttonn3} >
           <Text style={styles.text}>{value.user}</Text>
         </View>
         <View style={styles.button1}>
-          <Text style={styles.text1}>{value.bot ? value.bot : ""}</Text>
+          {loading ? <ActivityIndicator size="large" color="#00ff00" /> : <Text style={styles.text1}>{value.bot ? value.bot : ""}</Text>}
         </View>
       </View>
     )
   })
+
+
 
   const uploadMessageAI = async () => {
     try {
@@ -78,22 +82,22 @@ export default function AIPage() {
 
         <View style={styles.container}>
           {
-          chats.length === 0 ?  
-          <View style={styles.button0}>
-            <Text style={styles.text0}>Ini menggunakan kemampuan AI berbasis chat gpt untuk merekomendasikan resep makanan yang cocok untuk kamu hari ini</Text>
-          </View>
-          :  rederedChats 
+            chats.length === 0 ?
+              <View style={styles.button0}>
+                <Text style={styles.text0}>Ini menggunakan kemampuan AI berbasis chat gpt untuk merekomendasikan resep makanan yang cocok untuk kamu hari ini</Text>
+              </View>
+              : rederedChats
           }
         </View>
-        
+
       </ScrollView>
       <View style={styles.indicatorContainer}>
-   
+
         <Pressable style={styles.buttonn} onPress={uploadMessageAI}>
           <Text style={styles.text}>Rekomendasi resep makanan</Text>
         </Pressable>
       </View>
-      
+
 
     </View>
   );
@@ -114,20 +118,20 @@ const styles = StyleSheet.create({
     marginLeft: 47,
     alignItems: 'center',
     justifyContent: 'center',
-    padding : 8,
+    padding: 8,
     borderRadius: 10,
     elevation: 3,
     backgroundColor: "#EF551D",
   },
-  
+
   indicatorContainer: {
     width: width - 30,
-    height : height - 670,
+    height: height - 670,
     padding: 20,
     paddingTop: 0,
     margin: 15,
     borderRadius: 20,
-    zIndex : -5,
+    zIndex: -5,
   },
   button1: {
     marginTop: 20,
@@ -159,8 +163,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     elevation: 3,
     backgroundColor: "#EF551D",
-    zIndex : 10,
-    height : height - 670,
+    zIndex: 10,
+    height: height - 670,
   },
   text: {
     fontSize: 14,
