@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -16,10 +16,10 @@ import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faBowlFood, faCookieBite, faIceCream, faMagnifyingGlass, faMugSaucer, faTimes } from "@fortawesome/free-solid-svg-icons";
+import {  faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useNavigation } from '@react-navigation/native';
 import { gql, useQuery } from '@apollo/client';
-import { faClock } from "@fortawesome/free-regular-svg-icons";
+import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
 
 const fetchRecipe = gql`
 query FindRecipes {
@@ -66,6 +66,7 @@ const IMAGES = [
 
 
 export default function HomePage() {
+  const [isfavorit, setIsFavorit] = useState(false)
   const navigation = useNavigation();
   const { loading, error, data } = useQuery(fetchRecipe);
 
@@ -73,11 +74,11 @@ export default function HomePage() {
     var words = inputString.split(" ");
     var numWords = words.length;
 
-    if (numWords <= 20) {
+    if (numWords <= 19) {
       return inputString;
     }
 
-    var truncatedWords = words.slice(0, 20);
+    var truncatedWords = words.slice(0, 19);
     var truncatedString = truncatedWords.join(" ");
     return truncatedString + " ...";
   }
@@ -159,7 +160,7 @@ export default function HomePage() {
               style={styles.button1}
               onPress={() => navigation.navigate('SearchPage')}
             >
-              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} size={15} style={{ color: "#98A8BA", }} /> Search</Text>
+              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} beat size={13} style={{ color: "#98A8BA", }} /> Cari Resep</Text>
             </Pressable>
             <Pressable
               style={styles.button}
@@ -171,20 +172,33 @@ export default function HomePage() {
 
           <Text style={styles.textHeaders}>Resep Terbaru</Text>
 
-          {data.findRecipes && 
+          {
+          data.findRecipes && 
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
             {data.findRecipes.map((el, index) => {
               return ( 
-                <Pressable style={styles.container} key={index} onPress={() => navigation.navigate('Detail', { id: el.id })} >
-                 
+                <View key={index} style={{position : 'relative'}}>
+                <Pressable style={styles.container} onPress={() => navigation.navigate('Detail', { id: el.id })} >
+                  <View>
                     <Image style={styles.photo} source={{ uri: el.image }} />
+                  </View>
                     <Text style={styles.title}>{el.title}</Text>
                     <Text style={styles.descriptions}>{el.description ? limitStringTo20Words(el.description) : el.description}</Text>
-                  
                 </Pressable>
+                    <Pressable style={{ zIndex : 1 , position : 'absolute',marginLeft : 130, marginTop : 10, }} onPress={() => {
+                      if(isfavorit){
+                        setIsFavorit(false)
+                      }else{
+                        setIsFavorit(true)
+                      }
+                    }}>
+                    <FontAwesomeIcon icon={faHeart} beat size={21}  color={isfavorit ? '#EB5757' : 'gray' } />
+                    </Pressable>
+                </View>
               )
             })}
-          </View>}
+          </View>
+          }
 
         </View>
       </ScrollView>

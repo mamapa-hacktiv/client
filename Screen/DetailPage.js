@@ -1,4 +1,4 @@
-import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator} from "react-native";
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator, Pressable} from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { gql, useQuery } from '@apollo/client';
+import { faHeart } from "@fortawesome/free-solid-svg-icons";
 
 
 const { width, height } = Dimensions.get('window')
@@ -105,10 +106,10 @@ const customStyles = {
   labelColor: '#999999',
   labelSize: 13,
   currentStepLabelColor: '#ff3232',
-  borderRadius : 10
 };
 
 export default function DetailPage({ route }) {
+  const [isfavorit, setIsFavorit] = useState(false)
   const { loading, error, data: detailvalue, refetch } = useQuery(FindRecipe, {
     variables: {
       findRecipeId : route.params.id
@@ -184,6 +185,15 @@ export default function DetailPage({ route }) {
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >{detailvalue.findRecipe.title}</Text>
             <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B'}} >by {detailvalue.findRecipe.User.username}</Text>
             <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B'}} ><FontAwesomeIcon icon={faClock} color="#5B5B5B" size={10}></FontAwesomeIcon> {detailvalue.findRecipe.cookingTime}</Text>
+            <Pressable style={{ zIndex : 1 , position : 'absolute',marginTop : 10, alignSelf : 'flex-end', paddingRight : 10 }} onPress={() => {
+                      if(isfavorit){
+                        setIsFavorit(false)
+                      }else{
+                        setIsFavorit(true)
+                      }
+                    }}>
+                    <FontAwesomeIcon icon={faHeart} beat size={35}  color={isfavorit ? '#EB5757' : 'gray' } />
+                    </Pressable>
             </View>
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Bahan - bahan</Text>
             <View style={styles.ingridientsContainer}>
