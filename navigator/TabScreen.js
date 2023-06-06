@@ -25,7 +25,7 @@ export default function TabScreen() {
                 component={HomePage}
                 options={{
                     headerShown: false,
-                    tabBarLabel: 'HomeTab',
+                    tabBarLabel: 'Home',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="home" color={color} size={size} />
                     ),
@@ -44,10 +44,10 @@ export default function TabScreen() {
             />
 
             <Tab.Screen
-                name="FormAdd"
+                name="Tambahkan resep makanan mu"
                 component={FormAdd}
                 options={{
-                    tabBarLabel: 'Add Recipe',
+                    tabBarLabel: 'Tambah Resep',
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesomeIcon icon={faPlus} color={color} size={size} />
                     ),
@@ -69,7 +69,7 @@ export default function TabScreen() {
                 component={Profil}
                 options={{
                     headerShown: false,
-                    tabBarLabel: 'Profiles',
+                    tabBarLabel: 'Profil',
                     tabBarIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="account" color={color} size={size} />
                     ),

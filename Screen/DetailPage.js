@@ -205,21 +205,21 @@ export default function DetailPage({ route }) {
                 direction="vertical"
                 renderLabel={({ position, stepStaus, label, crntPosition }) => {
                   return (
+                    <>
                     <View style={styles.lblcontainer}>
                       <Text style={styles.lbltext}> {value[position].label}</Text>
                       <Text style={[styles.status, { marginTop: 5 }]}> {value[position].status}</Text>
                     </View>
+                    <View style={{alignSelf : 'flex-start'}}>
+                      <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
+                        <Text style={styles.text}>Next</Text>
+                      </TouchableOpacity>
+                    </View>
+                    </>
                   )
                 }}
               />
-              <View style={{ flexDirection: 'row', gap: 80 }}>
-                <TouchableOpacity style={styles.previousBtn} onPress={() => previouseStep()}>
-                  <Text style={styles.text}>Previous</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.nextBtn} onPress={() => nextStep()}>
-                  <Text style={styles.text}>Next</Text>
-                </TouchableOpacity>
-              </View>
+             
             </View>
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Comments</Text>
             <View style={styles.reactionContainer}>
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   nextBtn: {
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     paddingVertical: 12,
     paddingHorizontal: 32,
     borderRadius: 4,

@@ -50,7 +50,7 @@ export default function Favorit() {
     if (!access_token) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-             <Image style={{ width : 300, height :200, }} source={require('../assets/ilustratorlogin.png')}>
+             <Image style={{ width : 300, height :200}} source={require('../assets/ilustratorlogin.png')}>
              </Image>
                 <Text style={{ fontWeight: '200'}}> Maaf! kamu harus login ke akun kamu terlebih dahulu</Text>
 
@@ -123,7 +123,8 @@ const styles = StyleSheet.create({
         borderWidth: 0.5,
         borderRadius: 10,
         backgroundColor: 'white',
-        elevation: 5
+        elevation: 5,
+        marginBottom : 10
     },
     photo: {
         width: "100%",

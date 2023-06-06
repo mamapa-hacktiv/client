@@ -61,6 +61,9 @@ export default function Profil() {
 
     if (access_token) {
         return (
+            <ScrollView>
+
+            
             <SafeAreaView>
                 <ImageBackground
                     source={require('../assets/vectorOren.png')}
@@ -107,6 +110,7 @@ export default function Profil() {
                     </View>
                 </ImageBackground>
             </SafeAreaView>
+            </ScrollView>
         )
     } else {
         return <LoginForm />
@@ -115,6 +119,7 @@ export default function Profil() {
 
 
 }
+
 
 const styles = StyleSheet.create({
     container: {
@@ -129,7 +134,6 @@ const styles = StyleSheet.create({
     },
     profilContainer: {
         width: width - 30,
-        height: height - 130,
         padding: 20,
         paddingTop: 0,
         margin: 15,
@@ -141,7 +145,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
     },
-    textIcon: {
+    textIcon : {
         fontWeight: '500',
         fontSize: 15,
     },
@@ -163,18 +167,24 @@ const styles = StyleSheet.create({
         flexDirection: 'row'
     },
     cardContainer: {
-        padding: 15,
+        overflow: "hidden",
+        marginBottom: 20,
         borderColor: '#cccccc',
-        alignItems: 'center'
+        marginLeft : 5,
+        marginRight : 5,
+        borderWidth: 0.5,
+        borderRadius: 20,
+        width : 135,
+        alignItems : 'center',
+        justifyContent : 'space-between'
     },
     photo: {
         width: "100%",
         marginTop: 0,
-        height: 100,
+        height: 70,
         borderBottomLeftRadius: 0,
         borderBottomRightRadius: 0,
-        resizeMode: 'center',
-        borderRadius: 15
+        borderRadius : 15
     },
 
 

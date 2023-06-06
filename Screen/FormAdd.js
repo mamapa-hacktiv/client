@@ -137,7 +137,7 @@ export default function FormAdd() {
   if (!access_token) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image style={{ width : 300, height :200, }} source={require('../assets/ilustratorlogin.png')}>
+      <Image style={{ width : 300, height :200 }} source={require('../assets/ilustratorlogin.png')}>
       </Image>
          <Text style={{ fontWeight: '200'}}> Maaf! kamu harus login ke akun kamu terlebih dahulu</Text>
 
@@ -157,7 +157,6 @@ export default function FormAdd() {
         source={require('../assets/vectorOren.png')}
         style={{ ...styles.imageBackground }}
       >
-
 
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
           <View style={{ paddingTop: 20 }}>
@@ -229,7 +228,7 @@ const styles = StyleSheet.create({
   imageBackground: {
     width: "100%",
     height: '85%',
-    zIndex: -1
+    zIndex: -1,
   },
   button: {
     alignItems: "center",

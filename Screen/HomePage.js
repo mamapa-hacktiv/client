@@ -171,17 +171,16 @@ export default function HomePage() {
 
           <Text style={styles.textHeaders}>Resep Terbaru</Text>
 
-          {data.findRecipes && <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
+          {data.findRecipes && 
+          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
             {data.findRecipes.map((el, index) => {
-              return (
-                <Pressable key={index} onPress={() => navigation.navigate('Detail', { id: el.id })} >
-
-                  <View style={styles.container}>
-
+              return ( 
+                <Pressable style={styles.container} key={index} onPress={() => navigation.navigate('Detail', { id: el.id })} >
+                 
                     <Image style={styles.photo} source={{ uri: el.image }} />
                     <Text style={styles.title}>{el.title}</Text>
                     <Text style={styles.descriptions}>{el.description ? limitStringTo20Words(el.description) : el.description}</Text>
-                  </View>
+                  
                 </Pressable>
               )
             })}
@@ -203,8 +202,10 @@ const styles = StyleSheet.create({
     width: (SCREEN_WIDTH - (recipeNumColums + 10) * RECIPE_ITEM_MARGIN) / recipeNumColums,
     height: RECIPE_ITEM_HEIGHT + 75,
     borderColor: '#cccccc',
-    borderWidth: 1.5,
+    borderWidth: 0.5,
     borderRadius: 10,
+    backgroundColor: 'white',
+    elevation: 5
 
   },
   photo: {

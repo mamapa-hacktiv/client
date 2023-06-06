@@ -62,15 +62,15 @@ export default function SearchPage() {
           <View style={{ flex: 1, flexDirection: 'row', padding: 15, justifyContent: 'space-around' }}>
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', flexDirection: 'row', gap: 7 }}>
               <TouchableOpacity onPress={() => navigation.navigate('HomeTab')}>
-                <FontAwesomeIcon icon={faArrowLeft} size={18} />
+                <FontAwesomeIcon icon={faArrowLeft} size={25} />
               </TouchableOpacity>
-              <Text style={{ fontWeight: "500", fontSize: 15, paddingBottom: 2 }}>Back</Text>
+            
             </View>
             <View style={{ flex: 3, justifyContent: 'center' }}>
-              <View style={{ backgroundColor: '#EDEDED', borderRadius: 20, justifyContent: 'center' }}>
+              <View style={{ backgroundColor: '#EDEDED', width : 250, height : 40 ,borderRadius: 20,elevation : 2, justifyContent: 'center' }}>
                 <TextInput
-                  style={{ left: 15, width: '85%' }}
-                  placeholder="Title Recipe"
+                  style={{ left: 15 }}
+                  placeholder="Nama Resep"
                   keyboardType='default'
                   onChangeText={(e) => { setSearch(e) }}
                   value={search}
@@ -82,7 +82,7 @@ export default function SearchPage() {
           <View style={{ flex: 11, paddingHorizontal: 20 }}>
             <View style={{ flex: 1 }}>
               <View style={{ flex: 1, paddingTop: 15 }}>
-                <Text style={{ fontWeight: '500', fontSize: 18, textTransform: 'capitalize' }}>{search && data.recipeSearch.length} product found</Text>
+                <Text style={{ fontWeight: '500', fontSize: 18, textTransform: 'capitalize' }}>{search && data.recipeSearch.length} Resep yang ditemukan</Text>
               </View>
               <View style={{ flex: 12, gap: 15, paddingTop: 10 }}>
 
