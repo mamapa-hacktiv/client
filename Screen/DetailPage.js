@@ -1,25 +1,16 @@
-import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator, Pressable} from "react-native";
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Pressable, Image, Button } from "react-native";
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
+import { faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
-import { gql, useQuery } from '@apollo/client';
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { gql, useQuery, useMutation } from '@apollo/client';
+import { faCheck, faHeart, faTrashCan } from "@fortawesome/free-solid-svg-icons";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Circle, G, Text as TextSvg, Svg } from 'react-native-svg';
 
-
-const { width, height } = Dimensions.get('window')
-
-const labels = [
-  'Rebus',
-  'Masak',
-  'Bumbuin',
-  'Beri perasa',
-  'Sajikan',
-  'Sajikan',
-]
-
+const { width } = Dimensions.get('window')
 
 const FindRecipe = gql`
 query FindRecipe($findRecipeId: ID!) {
@@ -98,10 +89,34 @@ query FindFavorite {
   }
 }
 `;
+const getUser = gql`
+query GetUser {
+  getUser {
+    id
+    username
+    email
+    phoneNumber
+  }
+}
+`;
+const deleteComment = gql`
+mutation DeleteComment($commentId: ID) {
+  deleteComment(commentId: $commentId) {
+    message
+  }
+}
+`;
 
 const deleteFavorite = gql`
 mutation DeleteFavorite($favoriteId: ID) {
   deleteFavorite(favoriteId: $favoriteId) {
+    message
+  }
+}
+`;
+const createComment = gql`
+mutation CreateComment($message: String, $recipeId: ID) {
+  createComment(message: $message, recipeId: $recipeId) {
     message
   }
 }
@@ -113,7 +128,6 @@ mutation CreateFavorite($recipeId: ID) {
   }
 }
 `;
-
 
 const customStyles = {
   stepIndicatorSize: 25,
@@ -137,19 +151,30 @@ const customStyles = {
 };
 
 export default function DetailPage({ route }) {
-  const [isfavorit, setIsFavorit] = useState(false)
+  const [comment, setComment] = useState('')
   const isfocused = useIsFocused()
   const [access_token, setAccessToken] = useState("");
   const navigation = useNavigation();
-
-
   const { loading, error, data: detailvalue, refetch } = useQuery(FindRecipe, {
     variables: {
       findRecipeId: route.params.id
     }
   });
+
   const { loading: loadingFavorite, error: errorFavorite, data: dataFavorite, refetch: refetchFavorite } = useQuery(FindFavorite);
+  const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(getUser);
+  console.log(dataUser);
   const [deleteFavorites, { data: dataDelete, loading: loadingDelete, error: errorDelete }] = useMutation(deleteFavorite, {
+    onError: (err) => {
+      console.log(err, "error graph");
+    }
+  })
+  const [uploadComment, { data: dataComment, loading: loadingComment, error: errorComment }] = useMutation(createComment, {
+    onError: (err) => {
+      console.log(err, "error graph");
+    }
+  })
+  const [deleteCommentHandle, { data: dataDelComment, loading: loadingDelComment, error: errorDelComment }] = useMutation(deleteComment, {
     onError: (err) => {
       console.log(err, "error graph");
     }
@@ -168,8 +193,13 @@ export default function DetailPage({ route }) {
         console.error("Error retrieving access token:", error);
       });
     refetchFavorite()
+
   }, [dataDelete, dataCreate])
 
+  useEffect(() => {
+    refetch()
+  }, [dataComment, dataDelComment])
+  
 
   const [currentPosition, setCurrentPosition] = useState(0)
 
@@ -177,31 +207,77 @@ export default function DetailPage({ route }) {
     setCurrentPosition(currentPosition + 1)
   }
 
-  const previouseStep = () => {
-    setCurrentPosition(currentPosition - 1)
-  }
-  const value = [
-    {
-      label: 'Step 1',
-      status: 'Cuci beras hingga bersih lalu tiriskan'
-    },
-    {
-      label: 'Step 2',
-      status: 'Masukkan semua bahan-bahan ke dalam panci'
-    },
-    {
-      label: 'Step 3',
-      status: 'Masak di atas api sedang hingga air habis dan aduk-aduk sesekali agar tidak lengket'
-    },
-    {
-      label: 'Step 4',
-      status: 'Pindahkan ke dalam dandang yang sudah dipanaskan. Kukus hingga matang'
-    },
-    {
-      label: 'Step 5',
-      status: 'Sajikan nasi uduk bersama irisan telur dadar, tempe orek, bakwan, bihun goreng dan beri taburan bawang goreng'
+
+
+  function convertTime(diff) {
+    const seconds = Math.floor(diff / 1000);
+    const minutes = Math.floor(seconds / 60);
+    const hours = Math.floor(minutes / 60);
+    const days = Math.floor(hours / 24);
+
+    if (days > 0) {
+      return `${days} hari yang lalu`;
+    } else if (hours > 0) {
+      return `${hours} jam yang lalu`;
+    } else if (minutes > 0) {
+      return `${minutes} menit yang lalu`;
+    } else {
+      return `${seconds} detik yang lalu`;
     }
-  ]
+  }
+
+  function dateConvertion(date) {
+    // Mendapatkan tanggal sekarang
+    const now = new Date();
+
+
+    // Mendapatkan tanggal createdAt dari Sequelize (asumsi telah di-parse menjadi objek Date)
+    const createdAt = new Date(+date);
+
+
+    // Menghitung selisih waktu antara createdAt dan sekarang dalam milidetik
+    const diff = now - createdAt;
+
+
+    // Fungsi untuk mengonversi selisih waktu menjadi string yang diinginkan
+
+    // Mengonversi selisih waktu menjadi string
+    const convertedTime = convertTime(diff);
+    return convertedTime
+  }
+
+
+  // Function to generate SVG for a given name
+  function generateNameSVG(name) {
+    // Extract the first letter of the name
+    const firstLetter = name.charAt(0).toUpperCase() 
+    let secondLetter = ""
+    if (name.split(' ')[1]) {
+       secondLetter = name.split(' ')[1].charAt(0).toUpperCase() 
+    }
+
+    // Generate a random color for the circle background
+    const circleColor = "gray";
+
+    return (
+      <Svg width={55} height={55}>
+        <G>
+          <Circle cx={29} cy={29} r={25} fill={circleColor} />
+          <TextSvg
+            x={30}
+            y={32}
+            textAnchor="middle"
+            fontSize={25}
+            fontFamily="Arial"
+            fill="white"
+            alignmentBaseline="middle"
+          >
+            {firstLetter + (secondLetter ? secondLetter : '')}
+          </TextSvg>
+        </G>
+      </Svg>
+    );
+  }
 
 
   function videoUrlValue(url) {
@@ -222,18 +298,27 @@ export default function DetailPage({ route }) {
     }
   }
 
-  console.log(detailvalue?.findRecipe?.Steps?.length);
   if (detailvalue) {
     return (
       <>
         <ScrollView>
           <View>
-            <YoutubePlayer
+            {/* <YoutubePlayer
               height={210}
               play={false}
               videoId={videoUrlValue(detailvalue.findRecipe.videoUrl)}
-            />
-          </View>
+            /> */}
+             <Image
+                style={{width: 400, height: 400}}
+                source={{
+                  uri: detailvalue?.findRecipe?.image,
+                }}
+              />
+            </View>
+          
+    
+          
+         
           <View style={{ marginLeft: 20, margin: 14, flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flex: 1 }}>
               <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >{detailvalue.findRecipe.title}</Text>
@@ -275,12 +360,7 @@ export default function DetailPage({ route }) {
               })}
             </View>
           </View>
-          <Button
-            title="Coba Chat"
-            onPress={() => {
-              navigation.navigate('Chat', { id: detailvalue?.findRecipe?.UserId })
-            }}
-          />
+
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Langkah - langkah</Text>
           <View style={styles.indicatorContainer}>
             <StepIndicator
@@ -307,44 +387,70 @@ export default function DetailPage({ route }) {
                         </TouchableOpacity>
                       }
                     </View>
-                    </>
-                  )
-                }}
-              />
-             
-            </View>
-            <View style={styles.reactionContainer}>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold"}} >Komentar</Text>
-            <View style={{flexDirection : 'row' , marginTop : 5 }}>
-            <View>
-              <FontAwesomeIcon icon={faUser} size={49} color="#5B5B5B">  </FontAwesomeIcon>
-            </View>
-            <View>
-            <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Fachri Hawari</Text>
-            <Text style={{ textAlign: 'left', fontSize: 7, fontWeight: "light", marginTop : 2}} > 6 hari yang lalu</Text>
-            <Text style={{ textAlign: 'left', fontSize: 12, fontWeight: "light", marginTop : 2}} > Itu Step nya kurang foto ya!</Text>
-            </View>
-      
-            </View>
-            <Image  style={{ width: "100%" }} source={require('../assets/vectorline.png')}></Image>
-            <View style={{flexDirection : 'row' , marginTop : 5}}>
-            <View>
-              <FontAwesomeIcon icon={faUser} size={49} color="#5B5B5B">  </FontAwesomeIcon>
-            </View>
-            <View>
-            <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} > Harry Dimas</Text>
-            <Text style={{ textAlign: 'left', fontSize: 7, fontWeight: "light", marginTop : 2}} > 6 hari yang lalu</Text>
-            <Text style={{ textAlign: 'left', fontSize: 12, fontWeight: "light" , marginTop : 2}} > Style nya bisa di bagusin lagi ya bang</Text>
-            </View>
-            </View>
-            <View style={{flexDirection: 'row', gap :7, marginTop: 10}} >
-              <TextInput style={styles.input} placeholder="keren" />
-              <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
+                  </>
+                )
+              }}
+            />
+
+          </View>
+          <Pressable style={styles.chatUser} onPress={() => {
+              // console.log(detailvalue.findRecipe.UserId);
+              navigation.navigate("Chat", { id: detailvalue?.findRecipe?.UserId, name: detailvalue?.findRecipe?.User.username });
+            }}>
+               <Text style={styles.text1}> Tanya Chef</Text>
+            </Pressable>
+          <View style={styles.reactionContainer}>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold" }} >Komentar</Text>
+
+            {detailvalue?.findRecipe?.Comments?.map((el, index) => {
+              return (
+                <View key={index}>
+                  <Image style={{ width: "100%", marginTop: 10 }} source={require('../assets/vectorline.png')}></Image>
+                  <View style={{ flexDirection: 'row', marginTop: 5, gap: 10, justifyContent: 'space-between' }} >
+                    <View style={{}}>
+                      <View style={{ alignItems: 'center' }}>{generateNameSVG(el.User.username)}</View>
+                      {/* <Text style={{ textAlign: 'center' }}>asdfasd</Text> */}
+                    </View>
+                    <View style={{ flex: 1, alignSelf: 'flex-start' }}>
+                      <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >{el.User.username}</Text>
+                      <Text style={{ textAlign: 'left', fontSize: 9, fontWeight: "light", marginTop: 2 }} >{dateConvertion(el.createdAt)}</Text>
+                      <Text style={{ textAlign: 'left', fontSize: 12, fontWeight: "light", marginTop: 2 }} >{el.message}</Text>
+                    </View>
+                    {dataUser?.getUser?.id === el?.User?.id ? <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'stretch' }} onPress={() => {
+                      deleteCommentHandle({
+                          variables: {
+                            "commentId": el.id,
+                          }
+                         })  
+                    }}>
+                      <FontAwesomeIcon icon={faTrashCan} color="#EF551D" size={15}> 
+                      </FontAwesomeIcon>
+                
+                    </TouchableOpacity> : <View></View>}
+                   
+                  </View>
+                </View>
+              )
+            })}
+            <Image style={{ width: "100%" }} source={require('../assets/vectorline.png')}></Image>
+            <View style={{ flexDirection: 'row', gap: 7 }} >
+              <TextInput style={styles.input} placeholder="keren" value={comment} onChangeText={(e) => {
+                setComment(e)
+              }} />
+              <TouchableOpacity style={styles.submitReaction} onPress={() => {
+                console.log(detailvalue?.findRecipe?.id, comment, 'ini mana');
+                uploadComment({
+                  variables: {
+                    "recipeId": +detailvalue?.findRecipe?.id,
+                    "message": comment
+                  }
+                }
+                )
+              }}>
                 <Text style={styles.text1}>Submit</Text>
               </TouchableOpacity>
             </View>
           </View>
-
         </ScrollView>
       </>
     )
@@ -368,7 +474,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 4,
     elevation: 3,
-    width: "65%",
+    width: "70%",
     height: 40,
     backgroundColor: "#EDEDED",
   },
@@ -408,8 +514,6 @@ const styles = StyleSheet.create({
     width: width - 30,
     padding: 20,
     margin: 15,
-
-    
     gap: 5
   },
   lblcontainer: {
@@ -457,6 +561,18 @@ const styles = StyleSheet.create({
   },
   text1: {
     color: "white",
-    fontSize: 15
+    fontSize: 15,
+    textAlign : 'center'
+  },
+  chatUser : {
+    alignSelf: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 25,
+    marginTop : 20 ,
+    width : "70%",
+    borderRadius: 4,
+    elevation: 10,
+    height: 50,
+    backgroundColor: "#EF551D",
   }
 })

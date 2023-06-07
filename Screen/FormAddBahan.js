@@ -87,9 +87,16 @@ export default function FormAddBahan({ route }) {
 
 
 
+
     const navigation = useNavigation();
-    const [ingredients, setIngredients] = useState(dataRecipe ? dataRecipe.findRecipe.Ingredients : [{ "name": "" }])
-    const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe.Steps : [
+    const [ingredients, setIngredients] = useState(dataRecipe ? dataRecipe.findRecipe?.Ingredients.map(el => {
+        delete el.__typename
+        return el
+    }) : [{ "name": "" }])
+    const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe?.Steps.map(el => {
+          delete el.__typename
+          return el
+        }) : [
         {
             "image": '',
             "instruction": ""
@@ -100,7 +107,8 @@ export default function FormAddBahan({ route }) {
     const [uploadForm, { data, loading, error }] = useMutation(mutationUpload, {
         onError: (err) => {
             console.log(err, "error graph");
-        }
+        },
+        // refetchQueries: []
     });
     const [uploadEditForm, { data: dataEdit, loading: loadingEdit, error: errorEdit }] = useMutation(updateRecipe, {
         onError: (err) => {
@@ -110,21 +118,23 @@ export default function FormAddBahan({ route }) {
 
     const uploadRecipe = async () => {
         try {
+            console.log(route?.params?.recipeId, 'ini ada nggak');
             if (route?.params?.recipeId) {
+                console.log(recipeForm(), 'hasil edit');
                 await uploadEditForm({
                     variables: {
-                        newRecipe: recipeForm(),
-                        recipeId: route?.params?.recipeId
+                    "newRecipe": recipeForm(), 
+                    "recipeId": +route?.params?.recipeId
                     }
                 })
             } else {
-                console.log(recipeForm());
                 await uploadForm({
                     variables: {
                         newRecipe: recipeForm()
                     }
                 });
             }
+            navigation.navigate('HomeTab')
         } catch (error) {
             console.log(error.errors, "<---------");
         }
@@ -188,9 +198,18 @@ export default function FormAddBahan({ route }) {
     //   };
 
 
-    console.log(loading, 'ini loading juga');
+    // console.log(loading, 'ini loading juga');
 
-    if (loading) return <ActivityIndicator size="large" />
+    // if (loading) return <ActivityIndicator size="large" />
+
+
+  if (loadingRecipe || loadingEdit || loading ) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 
 
     return (
@@ -224,8 +243,7 @@ export default function FormAddBahan({ route }) {
                     <Pressable style={styles.buttonn} onPress={() => {
                         recipeForm({ ...recipeForm(), ingredients, steps })
                         uploadRecipe()
-                        console.log(recipeForm());
-                        // navigation.navigate('HomeTab')
+                        console.log(recipeForm(), 'ini tolong');
                     }
                     }>
                         <Text style={styles.text}>{route?.params?.recipeId ? "Ubah Resep" : "Buat Resep"}</Text>

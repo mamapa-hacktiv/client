@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, TextInput, Image, Button, Pressable, ScrollView
 import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowRight, faCamera } from '@fortawesome/free-solid-svg-icons'
+0
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import ReactNativeFile from "apollo-upload-client/public/ReactNativeFile.js";
@@ -61,31 +62,60 @@ export default function FormAdd({ route }) {
     })
   }
   const [form, setForm] = useState({})
-  console.log(route, 'asdkfjlkasd');
+
 
   useEffect(() => {
     refetchRecipe()
+    if (route?.params?.recipeId ) {
+      setForm({
+        "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
+        "image":  [],
+        "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
+        "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
+        "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
+        "portion": dataRecipe ? dataRecipe.findRecipe?.portion : '',
+        "cookingTime": dataRecipe ? dataRecipe.findRecipe?.cookingTime : null,
+        "ingredients": dataRecipe ? dataRecipe.findRecipe?.Ingredients.map(el => {
+          delete el.__typename
+          return el
+        }) : [
+          {
+            "name": "null"
+          }
+        ],
+        "steps": dataRecipe ? dataRecipe.findRecipe?.Steps.map(el => {
+          delete el.__typename
+          return el
+        }) : [
+          {
+            "image": "null",
+            "instruction": "null"
+          }
+        ],
+      })
+    } else {
+      setForm({
+        "title": "",
+        "image": [],
+        "description": "",
+        "videoUrl": "",
+        "origin": "",
+        "portion": '',
+        "cookingTime": null,
+        "ingredients": [
+          {
+            "name": "null"
+          }
+        ],
+        "steps": [
+          {
+            "image": "null",
+            "instruction": "null"
+          }
+        ],
+      })
+    }
 
-    setForm({
-      "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
-      "image": dataRecipe ? dataRecipe.findRecipe?.image : [],
-      "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
-      "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
-      "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
-      "portion": dataRecipe ? dataRecipe.findRecipe?.portion : '',
-      "cookingTime": dataRecipe ? dataRecipe.findRecipe?.cookingTime : null,
-      "ingredients": dataRecipe ? dataRecipe.findRecipe?.Ingredients : [
-        {
-          "name": "null"
-        }
-      ],
-      "steps": dataRecipe ? dataRecipe.findRecipe?.Steps : [
-        {
-          "image": "null",
-          "instruction": "null"
-        }
-      ],
-    })
   }, [route, isfocused, dataRecipe])
 
 
@@ -117,11 +147,7 @@ export default function FormAdd({ route }) {
       });
   }, [isfocused]);
 
-  const [uploadForm, { data, loading, error }] = useMutation(mutationUpload, {
-    onError: (err) => {
-      console.log(err, "error graph");
-    }
-  });
+
 
 
   const pickImage = async () => {
@@ -180,7 +206,13 @@ export default function FormAdd({ route }) {
   };
 
 
-  if (loading) return <ActivityIndicator size="large" />
+  if (loadingRecipe) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
 
   if (!access_token) {
     return (
@@ -203,25 +235,33 @@ export default function FormAdd({ route }) {
     <ScrollView>
       <ImageBackground
         source={require('../assets/vectorOren.png')}
-        style={{ ...styles.imageBackground }}
+        style={{ ...styles.imageBackground, }}
       >
-
         <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
           <View style={{ paddingTop: 20 }}>
             <TouchableOpacity onPress={pickImage}>
-              {image ? <Image
-                source={{ uri: image.uri }}
-                style={{ width: 320, height: 200, borderRadius: 30, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
-              /> :
-                <>
+              {image ?
+                <View style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
                   <Image
-                    source={{ uri: "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg" }}
-                    style={{ width: 320, height: 200, opacity: 0.4, borderRadius: 30, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
+                    source={{ uri: image.uri }}
+                    style={{ width: 320, height: 200, borderRadius: 30, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
                   />
-                  <Text style={{ position: "absolute", marginTop: 175, marginLeft: 90, color: "black" }}> <FontAwesomeIcon icon={faCamera} style={{ color: "black", }} /> UPLOAD PHOTO</Text>
+
+                  <Text style={{ position: "absolute", color: "white", fontWeight: "bold", fontSize: 20, textAlign: 'center' }}><FontAwesomeIcon icon={faCamera} style={{ color: "white" }} size={18} />  UBAH FOTO</Text>
+                </View>
+                :
+                <>
+                  <View style={{ position: 'relative', justifyContent: 'center', alignItems: 'center' }}>
+
+                    <Image
+                      source={{ uri: "https://asset.kompas.com/crops/MrdYDsxogO0J3wGkWCaGLn2RHVc=/84x60:882x592/750x500/data/photo/2021/11/17/61949959e07d3.jpg" }}
+                      style={{ width: 320, height: 200, borderRadius: 30, opacity: 0.5, zIndex: -1, marginBottom: 10, backgroundColor: 'white' }}
+                    />
+
+                    <Text style={{ position: "absolute", color: "white", fontWeight: "bold", fontSize: 20, textAlign: 'center' }}><FontAwesomeIcon icon={faCamera} style={{ color: "white" }} size={18} />  UPLOAD PHOTO</Text>
+                  </View>
                 </>
               }
-
             </TouchableOpacity>
           </View>
           <TextInput style={styles.input} placeholder="Name Recipes" onChangeText={(e) => onchange(e, 'title')} value={form.title} />

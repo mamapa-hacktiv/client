@@ -23,7 +23,10 @@ export default function AIPage() {
       console.log(err, "error graph");
     }
   });
-  console.log(data);
+  console.log(chats, 'chats');
+  console.log(chats.length, 'chats.length');
+  console.log(loading, 'loading');
+
 
   useEffect(() => {
     if (data) {
@@ -33,16 +36,22 @@ export default function AIPage() {
     }
   }, [data])
 
+  const renderLoadingPerContent = (bot) => {
+    if (bot) {
+      return <Text style={styles.text1}>{bot}</Text>
+    } else {
+      return <ActivityIndicator size="large" color="white" />
+    }
+  }
 
   const rederedChats = chats.map((value, index) => {
-    console.log(loading, value.bot);
     return (
       <View key={index}>
         <View style={styles.buttonn3} >
           <Text style={styles.text}>{value.user}</Text>
         </View>
         <View style={styles.button1}>
-          {loading ? <ActivityIndicator size="large" color="white" /> : <Text style={styles.text1}>{value.bot ? value.bot : ""}</Text>}
+          {renderLoadingPerContent(value.bot)}
         </View>
       </View>
     )
