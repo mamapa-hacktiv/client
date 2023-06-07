@@ -18,7 +18,7 @@ import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useFocusEffect } from '@react-navigation/native';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -92,6 +92,7 @@ const IMAGES = [
 
 export default function HomePage() {
   const isfocused = useIsFocused()
+
   const [isfavorit, setIsFavorit] = useState(false)
   const [access_token, setAccessToken] = useState("");
   const navigation = useNavigation();
@@ -109,19 +110,32 @@ export default function HomePage() {
     }
   });
 
+  useFocusEffect(
+    React.useCallback(() => {
+      AsyncStorage.getItem("access_token")
+        .then(value => {
+          setAccessToken(value || "");
+        })
+        .catch(error => {
+          console.error("Error retrieving access token:", error);
+        });
+      refetch()
+      refetchFavorite()
+    }, [])
+  );
 
 
-  useEffect(() => {
-    AsyncStorage.getItem("access_token")
-      .then(value => {
-        setAccessToken(value || "");
-      })
-      .catch(error => {
-        console.error("Error retrieving access token:", error);
-      });
-    refetch()
-    refetchFavorite()
-  }, [isfocused, dataDelete, dataCreate]);
+  // useEffect(() => {
+  //   AsyncStorage.getItem("access_token")
+  //     .then(value => {
+  //       setAccessToken(value || "");
+  //     })
+  //     .catch(error => {
+  //       console.error("Error retrieving access token:", error);
+  //     });
+  //   refetch()
+  //   refetchFavorite()
+  // }, [isfocused, dataDelete, dataCreate]);
 
   function limitStringTo20Words(inputString) {
     var words = inputString.split(" ");
@@ -165,9 +179,18 @@ export default function HomePage() {
 
   function favorite(id) {
     if (dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == id)) {
-      return <FontAwesomeIcon icon={faHeart} beat size={25} color={'#EB5757'} />
+
+      return (
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 6 }}>
+          <FontAwesomeIcon icon={faHeart} beat size={25} color={'#EB5757'} />
+        </View>
+      )
     } else {
-      return <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />
+      return (
+        <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 6 }}>
+          <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />
+        </View>
+      )
     }
   }
   console.log(dataFavorite);

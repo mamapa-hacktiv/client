@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, Image, FlatList, ActivityIndicator, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, Image, FlatList, ActivityIndicator, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { gql, useQuery, useMutation } from '@apollo/client';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -6,7 +6,8 @@ import { useNavigation } from '@react-navigation/native';
 import { useIsFocused } from '@react-navigation/native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
-import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faClock, faHeart, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faTrashCan } from '@fortawesome/free-regular-svg-icons';
 
 // import { access_token } from '../graphql/variable';
 
@@ -75,12 +76,40 @@ export default function Favorit() {
         refetch()
     }, [isfocused, dataDelete]);
 
+    const createTwoButtonAlert = (id) =>
+        Alert.alert('Hapus Favorit', 'Apakah kamu yakin ingin menghapus favorite?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK', onPress: () => {
+                    deleteFavorites({
+                        variables: {
+                            favoriteId: id
+                        }
+                    })
+                    refetch()
+                }
+            },
+        ]);
+
+
 
     function favorite(favoriteId) {
         if (data.findFavorite.find(({ id }) => id == favoriteId)) {
-            return <FontAwesomeIcon icon={faHeart} beat size={25} color={'#EB5757'} />
+            return (
+                <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 6 }}>
+                    <FontAwesomeIcon icon={faTrashCan} beat size={20} color={'gray'} />
+                </View>
+            )
         } else {
-            return <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />
+            return (
+                <View style={{ backgroundColor: 'white', borderRadius: 20, padding: 6 }}>
+                    <FontAwesomeIcon icon={faTrashCan} beat size={20} color={'gray'} />
+                </View>
+            )
         }
     }
 
@@ -136,12 +165,7 @@ export default function Favorit() {
                                         <Pressable style={{ zIndex: 1, position: 'absolute', right: 5, padding: 10, top: 17 }} onPress={() => {
                                             const result = data.findFavorite.find(({ id }) => id == item.id)
                                             if (result) {
-                                                deleteFavorites({
-                                                    variables: {
-                                                        favoriteId: result.id
-                                                    }
-                                                })
-                                                refetch()
+                                                createTwoButtonAlert(result.id)
                                             }
                                         }}>
                                             {favorite(item.id)}

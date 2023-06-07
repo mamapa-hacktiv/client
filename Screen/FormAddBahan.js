@@ -100,7 +100,8 @@ export default function FormAddBahan({ route }) {
     const [uploadForm, { data, loading, error }] = useMutation(mutationUpload, {
         onError: (err) => {
             console.log(err, "error graph");
-        }
+        },
+        // refetchQueries: []
     });
     const [uploadEditForm, { data: dataEdit, loading: loadingEdit, error: errorEdit }] = useMutation(updateRecipe, {
         onError: (err) => {
@@ -118,13 +119,13 @@ export default function FormAddBahan({ route }) {
                     }
                 })
             } else {
-                console.log(recipeForm());
                 await uploadForm({
                     variables: {
                         newRecipe: recipeForm()
                     }
                 });
             }
+            navigation.navigate('HomeTab')
         } catch (error) {
             console.log(error.errors, "<---------");
         }
@@ -188,9 +189,9 @@ export default function FormAddBahan({ route }) {
     //   };
 
 
-    console.log(loading, 'ini loading juga');
+    // console.log(loading, 'ini loading juga');
 
-    if (loading) return <ActivityIndicator size="large" />
+    // if (loading) return <ActivityIndicator size="large" />
 
 
     return (
@@ -225,7 +226,7 @@ export default function FormAddBahan({ route }) {
                         recipeForm({ ...recipeForm(), ingredients, steps })
                         uploadRecipe()
                         console.log(recipeForm());
-                        // navigation.navigate('HomeTab')
+
                     }
                     }>
                         <Text style={styles.text}>{route?.params?.recipeId ? "Ubah Resep" : "Buat Resep"}</Text>

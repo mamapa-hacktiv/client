@@ -65,27 +65,50 @@ export default function FormAdd({ route }) {
 
   useEffect(() => {
     refetchRecipe()
+    if (route?.params?.recipeId) {
+      setForm({
+        "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
+        "image": dataRecipe ? dataRecipe.findRecipe?.image : [],
+        "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
+        "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
+        "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
+        "portion": dataRecipe ? dataRecipe.findRecipe?.portion : '',
+        "cookingTime": dataRecipe ? dataRecipe.findRecipe?.cookingTime : null,
+        "ingredients": dataRecipe ? dataRecipe.findRecipe?.Ingredients : [
+          {
+            "name": "null"
+          }
+        ],
+        "steps": dataRecipe ? dataRecipe.findRecipe?.Steps : [
+          {
+            "image": "null",
+            "instruction": "null"
+          }
+        ],
+      })
+    } else {
+      setForm({
+        "title": "",
+        "image": [],
+        "description": "",
+        "videoUrl": "",
+        "origin": "",
+        "portion": '',
+        "cookingTime": null,
+        "ingredients": [
+          {
+            "name": "null"
+          }
+        ],
+        "steps": [
+          {
+            "image": "null",
+            "instruction": "null"
+          }
+        ],
+      })
+    }
 
-    setForm({
-      "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
-      "image": dataRecipe ? dataRecipe.findRecipe?.image : [],
-      "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
-      "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
-      "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
-      "portion": dataRecipe ? dataRecipe.findRecipe?.portion : '',
-      "cookingTime": dataRecipe ? dataRecipe.findRecipe?.cookingTime : null,
-      "ingredients": dataRecipe ? dataRecipe.findRecipe?.Ingredients : [
-        {
-          "name": "null"
-        }
-      ],
-      "steps": dataRecipe ? dataRecipe.findRecipe?.Steps : [
-        {
-          "image": "null",
-          "instruction": "null"
-        }
-      ],
-    })
   }, [route, isfocused, dataRecipe])
 
 

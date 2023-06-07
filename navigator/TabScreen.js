@@ -20,6 +20,7 @@ export default function TabScreen() {
             initialRouteName="HomeTab"
             screenOptions={{
                 tabBarActiveTintColor: '#EF551D',
+                unmountOnBlur: true
             }}
         >
             <Tab.Screen
@@ -44,22 +45,25 @@ export default function TabScreen() {
                     ),
                 }}
             />
+
             <Tab.Screen
-                name="Message"
-                component={MessagesScreen}
-                options={{
-                    tabBarLabel: "Message",
-                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="heart" color={color} size={size} />,
-                }}
-            />
-            <Tab.Screen
-                name="FormAdd"
+                name="Tambahkan Resep Makanan Kamu"
                 component={FormAdd}
                 options={{
                     tabBarLabel: 'Add Recipe',
                     tabBarIcon: ({ color, size }) => (
                         <FontAwesomeIcon icon={faPlus} color={color} size={size} />
                     ),
+
+                }}
+
+            />
+            <Tab.Screen
+                name="Message"
+                component={MessagesScreen}
+                options={{
+                    tabBarLabel: "Message",
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="message" color={color} size={size} />,
                 }}
             />
             {/* <Tab.Screen

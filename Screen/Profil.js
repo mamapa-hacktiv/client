@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Dimensions, ScrollView, ImageBackground, Image, FlatList, TouchableOpacity, Pressable } from 'react-native'
+import { StyleSheet, Text, View, Dimensions, ScrollView, ImageBackground, Image, FlatList, TouchableOpacity, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
@@ -40,7 +40,6 @@ mutation DeleteRecipe($recipeId: ID) {
 `;
 
 
-
 export default function Profil() {
     const [access_token, setAccessToken] = useState("");
     const isfocused = useIsFocused()
@@ -69,6 +68,21 @@ export default function Profil() {
         refetchData()
     }, [access_token, dataDelete]);
 
+    const createTwoButtonAlert = (id) =>
+        Alert.alert('Hapus Resep', 'Apakah kamu yakin ingin menghapus?', [
+            {
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel',
+            },
+            {
+                text: 'OK', onPress: () => deleteRecipeToggle({
+                    variables: {
+                        recipeId: id
+                    }
+                })
+            },
+        ]);
 
     if (access_token) {
         return (
@@ -125,20 +139,13 @@ export default function Profil() {
                                                             <View style={styles.fixToText}>
                                                                 <Pressable
                                                                     style={styles.button1}
-                                                                    onPress={() => navigation.navigate('Tambahkan resep makanan mu', { recipeId: item.id })}
+                                                                    onPress={() => navigation.navigate('Edit Recipe', { recipeId: item.id })}
                                                                 >
                                                                     <Text style={styles.text}> Edit</Text>
                                                                 </Pressable>
                                                                 <Pressable
                                                                     style={styles.button}
-                                                                    onPress={() => {
-                                                                        deleteRecipeToggle({
-                                                                            variables: {
-                                                                                recipeId: item.id
-                                                                            }
-                                                                        })
-
-                                                                    }}
+                                                                    onPress={() => createTwoButtonAlert(item.id)}
                                                                 >
                                                                     <Text style={styles.text}>Delete</Text>
                                                                 </Pressable>
