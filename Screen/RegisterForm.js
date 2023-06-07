@@ -59,56 +59,56 @@ export default function RegisterForm() {
     const navigation = useNavigation();
     return (
         <>
-            <ImageBackground
-                source={{
-                    uri: 'https://images.unsplash.com/photo-1565299585323-38d6b0865b47?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjN8fGZvb2R8ZW58MHwxfDB8fHww&auto=format&fit=crop&w=500&q=60',
-                }}
-                style={styles.imageBackground}
-                imageStyle={styles.image}
-            >
-                <View style={styles.textButton}>
-                    <Text style={{ ...styles.textHeaders, backgroundColor: 'rgba(245,94,0,1)', padding: 10, borderRadius: 15 }}>Buat akun barumu </Text>
+            <View style={{ flex: 2, alignItems: 'center' }}>
+                <View style={{ ...styles.textButton, justifyContent: 'flex-start' }}>
+                    <Text style={{ ...styles.textHeaders, position: 'absolute', color: 'black', opacity: 0.5, zIndex: 10 }}>Daftarkan akun mu segera!</Text>
                 </View>
-                <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,0)']}>
-                    <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: "90%" }}>
+                <View  >
 
-                        <View style={{ marginBottom: 20 }}>
-                            <TextInput label="Name"
-                                left={<TextInput.Icon icon="account" />}
-                                mode="outlined"
-                                style={{ margin: 5, justifyContent: 'flex-start' }}
-                                onChangeText={(e) => onchange(e, 'username')} value={registerForm.username}
-                            />
-                            <TextInput label="Email"
-                                left={<TextInput.Icon icon="email" />}
-                                mode="outlined"
-                                style={{ margin: 5, justifyContent: 'flex-start' }}
-                                onChangeText={(e) => onchange(e, 'email')} value={registerForm.email}
-                            />
-                            <TextInput label="Telpon"
-                                left={<TextInput.Icon icon="phone" />}
-                                mode="outlined"
-                                style={{ margin: 5, justifyContent: 'flex-start' }}
-                                onChangeText={(e) => onchange(e, 'phoneNumber')} value={registerForm.phoneNumber}
-                            />
-                            <TextInput label="Password"
-                                left={<TextInput.Icon icon="lock" />}
-                                mode="outlined"
-                                secureTextEntry={secure}
-                                style={{ margin: 5 }}
-                                onChangeText={(e) => onchange(e, 'password')} value={registerForm.password}
-                                right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
-                            />
-                        </View>
-                        <View style={styles.button}>
-                            <Pressable style={styles.buttonn} onPress={onClick}>
-                                <Text style={styles.text}>Submit</Text>
-                            </Pressable>
+                    <Image style={{ width: 300, height: 250, marginTop: 70 }} source={require('../assets/ilustratorRegister.png')}>
+                    </Image>
+                </View>
+            </View>
+            <View style={{ flex: 2, alignItems: 'center' }}>
+                <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: "90%", height : "99%", elevation : 10 }}>
 
-                        </View>
+                    <View style={{ marginBottom: 20 }}>
+                        <TextInput label="Name"
+                            left={<TextInput.Icon icon="account" />}
+                            mode="outlined"
+                            style={{ margin: 5, justifyContent: 'flex-start' }}
+                            onChangeText={(e) => onchange(e, 'username')} value={registerForm.username}
+                        />
+                        <TextInput label="Email"
+                            left={<TextInput.Icon icon="email" />}
+                            mode="outlined"
+                            style={{ margin: 5, justifyContent: 'flex-start' }}
+                            onChangeText={(e) => onchange(e, 'email')} value={registerForm.email}
+                        />
+                        <TextInput label="Telpon"
+                            left={<TextInput.Icon icon="phone" />}
+                            mode="outlined"
+                            style={{ margin: 5, justifyContent: 'flex-start' }}
+                            onChangeText={(e) => onchange(e, 'phoneNumber')} value={registerForm.phoneNumber}
+                        />
+                        <TextInput label="Password"
+                            left={<TextInput.Icon icon="lock" />}
+                            mode="outlined"
+                            secureTextEntry={secure}
+                            style={{ margin: 5 }}
+                            onChangeText={(e) => onchange(e, 'password')} value={registerForm.password}
+                            right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
+                        />
                     </View>
-                </LinearGradient>
-            </ImageBackground>
+                    <View style={styles.button}>
+                        <Pressable style={styles.buttonn} onPress={onClick}>
+                            <Text style={styles.text}>Submit</Text>
+                        </Pressable>
+
+                    </View>
+                </View>
+            </View>
+
         </>
     );
 };
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
     },
     textHeaders: {
-        fontSize: 35,
+        fontSize: 20,
         justifyContent: "center",
         fontWeight: 'bold',
         color: 'white',

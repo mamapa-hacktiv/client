@@ -1,9 +1,10 @@
-import { StyleSheet, Text, View, ImageBackground, Button, Pressable, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, Button, Pressable, ScrollView, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useMutation, gql, useReactiveVar } from '@apollo/client';
 
+const { width, height } = Dimensions.get('window')
 
 const GetAi = gql`
 mutation GetAi($message: String) {
@@ -76,18 +77,23 @@ export default function AIPage() {
       <ScrollView style={styles.scroll}>
 
         <View style={styles.container}>
+          {
+          chats.length === 0 ?  
           <View style={styles.button0}>
             <Text style={styles.text0}>Ini menggunakan kemampuan AI berbasis chat gpt untuk merekomendasikan resep makanan yang cocok untuk kamu hari ini</Text>
           </View>
-          {rederedChats}
-
+          :  rederedChats 
+          }
         </View>
+        
       </ScrollView>
-      <View style={styles.button}>
+      <View style={styles.indicatorContainer}>
+   
         <Pressable style={styles.buttonn} onPress={uploadMessageAI}>
           <Text style={styles.text}>Rekomendasi resep makanan</Text>
         </Pressable>
       </View>
+      
 
     </View>
   );
@@ -104,41 +110,42 @@ const styles = StyleSheet.create({
   scroll: {
     zIndex: -1,
   },
-
   buttonn3: {
     marginLeft: 47,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 4,
+    padding : 8,
+    borderRadius: 10,
     elevation: 3,
     backgroundColor: "#EF551D",
   },
-  button: {
-    width: "80%",
-    marginTop: 610,
-    position: 'absolute'
+  
+  indicatorContainer: {
+    width: width - 30,
+    height : height - 670,
+    padding: 20,
+    paddingTop: 0,
+    margin: 15,
+    borderRadius: 20,
+    zIndex : -5,
   },
   button1: {
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 50,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 4,
+    borderRadius: 10,
     elevation: 3,
     backgroundColor: "gray",
-
   },
   button0: {
     marginTop: 20,
     marginBottom: 10,
     paddingVertical: 12,
     paddingHorizontal: 15,
-    borderRadius: 4,
+    borderRadius: 10,
     elevation: 3,
-    backgroundColor: "#EDEDED",
-
+    backgroundColor: "#fdba74",
   },
   textButton: {
     marginBottom: 50
@@ -149,12 +156,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 4,
+    borderRadius: 8,
     elevation: 3,
     backgroundColor: "#EF551D",
+    zIndex : 10,
+    height : height - 670,
   },
   text: {
-    fontSize: 16,
+    fontSize: 14,
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
@@ -172,7 +181,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: 'bold',
     letterSpacing: 0.25,
-    color: 'black',
+    color: 'white',
   },
   overlay: {
     flex: 1,
