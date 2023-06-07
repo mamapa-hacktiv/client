@@ -64,12 +64,12 @@ export default function SearchPage() {
               <TouchableOpacity onPress={() => navigation.navigate('HomeTab')}>
                 <FontAwesomeIcon icon={faArrowLeft} size={20} />
               </TouchableOpacity>
-            
+
             </View>
             <View style={{ flex: 3, justifyContent: 'center' }}>
-              <View style={{ backgroundColor: '#EDEDED', width : 250, height : 40 ,borderRadius: 15,elevation : 4, justifyContent: 'center' }}>
+              <View style={{ backgroundColor: '#EDEDED', height: 40, width: 270, borderRadius: 10, elevation: 4, justifyContent: 'center' }}>
                 <TextInput
-                  style={{ left: 15 }}
+                  style={{ left: 15, }}
                   placeholder="Nama Resep"
                   keyboardType='default'
                   onChangeText={(e) => { setSearch(e) }}
