@@ -55,6 +55,11 @@ export default function FormAdd({ route }) {
       findRecipeId: route?.params?.recipeId
     }
   });
+  if (route?.params?.recipeId) {
+    refetchRecipe({
+      findRecipeId: route?.params?.recipeId
+    })
+  }
   const [form, setForm] = useState({})
   console.log(route, 'asdkfjlkasd');
 

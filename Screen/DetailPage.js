@@ -1,4 +1,4 @@
-import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Pressable } from "react-native";
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView, ActivityIndicator, Pressable, Button } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
@@ -7,7 +7,7 @@ import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-s
 import YoutubePlayer from "react-native-youtube-iframe";
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { faCheck, faHeart } from "@fortawesome/free-solid-svg-icons";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 
@@ -142,6 +142,7 @@ export default function DetailPage({ route }) {
   const [isfavorit, setIsFavorit] = useState(false)
   const isfocused = useIsFocused()
   const [access_token, setAccessToken] = useState("");
+  const navigation = useNavigation();
 
 
   const { loading, error, data: detailvalue, refetch } = useQuery(FindRecipe, {
@@ -276,6 +277,12 @@ export default function DetailPage({ route }) {
               })}
             </View>
           </View>
+          <Button
+            title="Coba Chat"
+            onPress={() => {
+              navigation.navigate('Chat', { id: detailvalue?.findRecipe?.UserId })
+            }}
+          />
           <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Langkah - langkah</Text>
           <View style={styles.indicatorContainer}>
             <StepIndicator
