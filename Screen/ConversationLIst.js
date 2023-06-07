@@ -4,7 +4,6 @@ import Spinner from "react-native-loading-spinner-overlay";
 import * as Animatable from "react-native-animatable";
 import Logo from "../assets/logo.png";
 import * as TalkRn from "@talkjs/expo";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { gql, useQuery } from "@apollo/client";
 
 const GetUser = gql`
@@ -18,13 +17,9 @@ const GetUser = gql`
   }
 `;
 
-
 export default function MessagesScreen({ navigation, route }) {
-
-
   const [isLoading, setIsLoading] = useState(false);
   const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
-  const [username, setUsername] = useState();
   console.log(dataUser, "<<ini data");
 
   console.log(route);
@@ -33,20 +28,15 @@ export default function MessagesScreen({ navigation, route }) {
     id: dataUser?.getUser?.id,
     name: dataUser?.getUser?.username,
     email: dataUser?.getUser?.email,
-
     photoUrl: "https://images.unsplash.com/photo-1552234994-66ba234fd567?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80",
-
-
     welcomeMessage: "Hey there! How are you? :-)",
     role: "default",
   };
 
   const other = {
-
-    id: route?.params?.id,
-    name: "dataUser?.getUser?.username",
-    email: "dataUser?.getUser?.email",
-
+    id: dataUser?.getUser?.id,
+    name: dataUser?.getUser?.username,
+    email: dataUser?.getUser?.email,
     photoUrl: "https://talkjs.com/images/avatar-5.jpg",
     welcomeMessage: "Hey, how can I help? https://google.com",
     role: "default",
@@ -57,14 +47,14 @@ export default function MessagesScreen({ navigation, route }) {
   conversationBuilder.setParticipant(me);
   conversationBuilder.setParticipant(other);
 
-  function navigateToChat() {
-    navigation.navigate("Chat");
-  }
+  // function navigateToChat() {
+  //   navigation.navigate("Chat");
+  // }
 
-  function onSelectConversation(conversation) {
-    setSelectedConversation(conversation);
-    navigateToChat();
-  }
+  // function onSelectConversation(conversation) {
+  //   setSelectedConversation(conversation);
+  //   navigateToChat();
+  // }
 
   useEffect(() => {
     setIsLoading(true);

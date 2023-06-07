@@ -19,9 +19,11 @@ const authLink = setContext(async (_, { headers }) => {
 });
 
 const client = new ApolloClient({
-  link: authLink.concat(createUploadLink({
-    uri: 'https://47bc-36-68-9-138.ngrok-free.app'
-  })),
+  link: authLink.concat(
+    createUploadLink({
+      uri: "https://49c9-36-68-9-138.ngrok-free.app",
+    })
+  ),
   cache: new InMemoryCache(),
 });
 
