@@ -1,4 +1,4 @@
-import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator, Pressable} from "react-native";
+import { Dimensions, Text, TextInput, View, StyleSheet, TouchableOpacity, ScrollView , ActivityIndicator, Pressable , Image} from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
 import StepIndicator from 'react-native-step-indicator';
 import React, { useState, useEffect } from 'react';
@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowLeft, faCircleRight, faClock } from "@fortawesome/free-regular-svg-icons";
 import YoutubePlayer from "react-native-youtube-iframe";
 import { gql, useQuery } from '@apollo/client';
-import { faHeart } from "@fortawesome/free-solid-svg-icons";
+import { faHeart, faUser } from "@fortawesome/free-solid-svg-icons";
 
 
 const { width, height } = Dimensions.get('window')
@@ -232,12 +232,30 @@ export default function DetailPage({ route }) {
               />
              
             </View>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", marginBottom: 5, marginLeft: 20 }} >Komentar</Text>
             <View style={styles.reactionContainer}>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Marsh</Text>
-            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Resep ini sangat bermanfaat bagiku</Text>
-            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Bunny</Text>
-            <Text style={{ textAlign: 'left', fontSize: 13, fontWeight: "light"}} >Komentar : Terimakasih resep nya</Text>
+            <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold"}} >Komentar</Text>
+            <View style={{flexDirection : 'row' , marginTop : 5 }}>
+            <View>
+              <FontAwesomeIcon icon={faUser} size={49} color="#5B5B5B">  </FontAwesomeIcon>
+            </View>
+            <View>
+            <Text style={{ textAlign: 'left', fontSize: 14, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} >Fachri Hawari</Text>
+            <Text style={{ textAlign: 'left', fontSize: 7, fontWeight: "light", marginTop : 2}} > 6 hari yang lalu</Text>
+            <Text style={{ textAlign: 'left', fontSize: 12, fontWeight: "light", marginTop : 2}} > Itu Step nya kurang foto ya!</Text>
+            </View>
+      
+            </View>
+            <Image  style={{ width: "100%" }} source={require('../assets/vectorline.png')}></Image>
+            <View style={{flexDirection : 'row' , marginTop : 5}}>
+            <View>
+              <FontAwesomeIcon icon={faUser} size={49} color="#5B5B5B">  </FontAwesomeIcon>
+            </View>
+            <View>
+            <Text style={{ textAlign: 'left', fontSize: 15, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize'}} > Harry Dimas</Text>
+            <Text style={{ textAlign: 'left', fontSize: 7, fontWeight: "light", marginTop : 2}} > 6 hari yang lalu</Text>
+            <Text style={{ textAlign: 'left', fontSize: 12, fontWeight: "light" , marginTop : 2}} > Style nya bisa di bagusin lagi ya bang</Text>
+            </View>
+            </View>
             <View style={{flexDirection: 'row', gap :7, marginTop: 10}} >
               <TextInput style={styles.input} placeholder="keren" />
               <TouchableOpacity style={styles.submitReaction} onPress={() => nextStep()}>
@@ -308,11 +326,7 @@ const styles = StyleSheet.create({
   reactionContainer: {
     width: width - 30,
     padding: 20,
-    margin: 15,
-    elevation: 10,
-    borderRadius: 20,
-    backgroundColor: 'white',
-    
+    margin: 10,
     gap: 5
   },
   lblcontainer: {
