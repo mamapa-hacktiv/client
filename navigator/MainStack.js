@@ -14,6 +14,7 @@ import ChatScreen from "../components/Chat";
 const Stack = createNativeStackNavigator();
 
 export default function MainStack() {
+
     return (
         <Stack.Navigator>
             <Stack.Screen name="Landing" component={LandingPage} options={{ headerShown: false }} />
@@ -27,6 +28,7 @@ export default function MainStack() {
             <Stack.Screen name="Chat" component={ChatScreen} />
         </Stack.Navigator>
     )
+
 }
 
 const styles = StyleSheet.create({});

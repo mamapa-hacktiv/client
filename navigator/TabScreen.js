@@ -15,6 +15,7 @@ import Chatbox from "../components/Chat";
 const Tab = createBottomTabNavigator();
 
 export default function TabScreen() {
+
     return (
         <Tab.Navigator
             initialRouteName="HomeTab"
@@ -87,7 +88,6 @@ export default function TabScreen() {
         </Tab.Navigator>
 
     );
-
 }
 
 const styles = StyleSheet.create({});
