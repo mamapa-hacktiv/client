@@ -17,7 +17,7 @@ export default function TabScreen() {
         <Tab.Navigator
             initialRouteName="HomeTab"
             screenOptions={{
-                tabBarActiveTintColor: '#e91e63',
+                tabBarActiveTintColor: '#EF551D',
             }}
         >
             <Tab.Screen

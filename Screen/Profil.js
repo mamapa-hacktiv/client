@@ -6,7 +6,7 @@ import { faFile, faSignOut, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoginForm from './LoginForm'
-import { gql, useQuery } from '@apollo/client';
+import { gql, useQuery, useMutation } from '@apollo/client';
 
 
 
@@ -31,6 +31,13 @@ query FindMyRecipes {
   }
 }
 `;
+const deleteRecipe = gql`
+mutation DeleteRecipe($recipeId: ID) {
+  deleteRecipe(recipeId: $recipeId) {
+    message
+  }
+}
+`;
 
 
 
@@ -40,7 +47,11 @@ export default function Profil() {
     const navigation = useNavigation();
     const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
     const { loading, error, data, refetch: refetchData } = useQuery(FindMyRecipes);
-
+    const [deleteRecipeToggle, { data: dataDelete, loading: loadingDelete, error: errorDelete }] = useMutation(deleteRecipe, {
+        onError: (err) => {
+            console.log(err, "error graph");
+        }
+    });
     console.log(data);
     useEffect(() => {
         AsyncStorage.getItem("access_token")
@@ -56,7 +67,7 @@ export default function Profil() {
     useEffect(() => {
         refetchUser()
         refetchData()
-    }, [access_token]);
+    }, [access_token, dataDelete]);
 
 
     if (access_token) {
@@ -95,42 +106,50 @@ export default function Profil() {
                                     <Text style={styles.textIcon}>  Resep Saya </Text>
                                 </View>
 
-                                {data ? <FlatList data={data.findMyRecipes} numColumns={1}
-                                    renderItem={({ item }) => {
-                                        return <View key={item.id} >
-                                            <Pressable onPress={() => navigation.navigate('Detail', { id: item.id })}>
-                                                <View style={{ height: 100, width: 290, marginBottom: 5, backgroundColor: 'white', elevation: 3, borderRadius: 15, borderColor: '#CACECF', borderWidth: 1, flexDirection: 'row', padding: 10, gap: 15 }}>
-                                                    <View style={{ flex: 1.5, justifyContent: 'center', alignItems: 'center' }}>
-                                                        <Image
-                                                            source={{
-                                                                uri: item.image,
-                                                            }}
-                                                            style={{ height: 80, width: 100, borderRadius: 15 }}
-                                                        />
-                                                    </View>
-                                                    <View style={{ flex: 2 }}>
-                                                        <Text style={{ fontSize: 15, fontWeight: 600, textTransform: 'capitalize' }}>{item.title}</Text>
-                                                        <View style={styles.fixToText}>
-                                                            <Pressable
-                                                                style={styles.button1}
-                                                                onPress={() => navigation.navigate('HomeTab')}
-                                                            >
-                                                                <Text style={styles.text}> Edit</Text>
-                                                            </Pressable>
-                                                            <Pressable
-                                                                style={styles.button}
-                                                                onPress={() => navigation.navigate('HomeTab')}
-                                                            >
-                                                                <Text style={styles.text}>Delete</Text>
-                                                            </Pressable>
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    {data ? data.findMyRecipes.map(item => {
+                                        return (
+                                            <View key={item.id} >
+                                                <Pressable onPress={() => navigation.navigate('Detail', { id: item.id })}>
+                                                    <View style={{ height: 100, width: 290, marginBottom: 5, backgroundColor: 'white', elevation: 3, borderRadius: 15, borderColor: '#CACECF', borderWidth: 1, flexDirection: 'row', padding: 10, gap: 15 }}>
+                                                        <View style={{ flex: 1.5, justifyContent: 'center', alignItems: 'center' }}>
+                                                            <Image
+                                                                source={{
+                                                                    uri: item.image,
+                                                                }}
+                                                                style={{ height: 80, width: 100, borderRadius: 15 }}
+                                                            />
+                                                        </View>
+                                                        <View style={{ flex: 2 }}>
+                                                            <Text style={{ fontSize: 15, fontWeight: 600, textTransform: 'capitalize' }}>{item.title}</Text>
+                                                            <View style={styles.fixToText}>
+                                                                <Pressable
+                                                                    style={styles.button1}
+                                                                    onPress={() => navigation.navigate('Tambahkan resep makanan mu', { recipeId: item.id })}
+                                                                >
+                                                                    <Text style={styles.text}> Edit</Text>
+                                                                </Pressable>
+                                                                <Pressable
+                                                                    style={styles.button}
+                                                                    onPress={() => {
+                                                                        deleteRecipeToggle({
+                                                                            variables: {
+                                                                                recipeId: item.id
+                                                                            }
+                                                                        })
+
+                                                                    }}
+                                                                >
+                                                                    <Text style={styles.text}>Delete</Text>
+                                                                </Pressable>
+                                                            </View>
                                                         </View>
                                                     </View>
-                                                </View>
-                                            </Pressable>
-                                        </View>
-                                    }}
-                                /> : <></>}
-
+                                                </Pressable>
+                                            </View>
+                                        )
+                                    }) : <></>}
+                                </View>
                             </View>
                         </View>
                     </ImageBackground>
@@ -214,31 +233,31 @@ const styles = StyleSheet.create({
         marginTop: 20,
         flexDirection: "row",
         justifyContent: "space-evenly",
-      },
-      button1: {
+    },
+    button1: {
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: 5,
         paddingHorizontal: 13,
-        borderRadius: 4,
+        borderRadius: 10,
         elevation: 3,
-        backgroundColor: "blue",
-      },
-      button: {
+        backgroundColor: "#0284c7",
+    },
+    button: {
         alignItems: "center",
         justifyContent: "center",
         paddingVertical: 5,
         paddingHorizontal: 13,
-        borderRadius: 4,
+        borderRadius: 10,
         elevation: 3,
-        marginLeft : 10,
+        marginLeft: 10,
         backgroundColor: "red",
-      },
-      text: {
+    },
+    text: {
         fontSize: 16,
         lineHeight: 21,
         fontWeight: "bold",
         letterSpacing: 0.25,
         color: "white",
-      },
+    },
 })

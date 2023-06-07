@@ -69,8 +69,8 @@ export default function RegisterForm() {
                     </Image>
                 </View>
             </View>
-            <View style={{ flex: 2, alignItems: 'center' }}>
-                <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: "90%", height : "99%", elevation : 10 }}>
+            <View style={{ flex: 2.5, alignItems: 'center', marginBottom: 35 }}>
+                <View style={{ marginBottom: 20, padding: 30, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: "90%", height: "99%", elevation: 10 }}>
 
                     <View style={{ marginBottom: 20 }}>
                         <TextInput label="Name"
@@ -103,6 +103,9 @@ export default function RegisterForm() {
                     <View style={styles.button}>
                         <Pressable style={styles.buttonn} onPress={onClick}>
                             <Text style={styles.text}>Submit</Text>
+                        </Pressable>
+                        <Pressable onPress={() => navigation.navigate('Profiles')} style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 5 }}>
+                            <Text style={styles.text1}>Already have account? click Here</Text>
                         </Pressable>
 
                     </View>
@@ -149,8 +152,9 @@ const styles = StyleSheet.create({
         fontSize: 15,
         lineHeight: 21,
         fontWeight: 'bold',
+        opacity: 0.5,
         letterSpacing: 0.25,
-        color: 'white',
+        color: 'black',
     },
     text: {
         fontSize: 20,

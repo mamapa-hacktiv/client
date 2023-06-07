@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
 import { faArrowRight, faCamera, faPlus } from '@fortawesome/free-solid-svg-icons'
 import { useNavigation } from '@react-navigation/native';
-import { useMutation, gql, useReactiveVar } from '@apollo/client';
+import { useMutation, gql, useReactiveVar, useQuery } from '@apollo/client';
 import { recipeForm } from '../graphql/variable';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useEffect } from 'react';
 
 const mutationUpload = gql`
   mutation Mutation($newRecipe: newRecipe) {
@@ -15,18 +16,85 @@ const mutationUpload = gql`
 }
 `;
 
+const updateRecipe = gql`
+mutation Mutation($newRecipe: newRecipe, $recipeId: ID) {
+  updateRecipe(newRecipe: $newRecipe, recipeId: $recipeId) {
+    id
+    title
+    image
+    description
+    videoUrl
+    origin
+    portion
+    cookingTime
+    UserId
+    Reactions {
+      id
+      emoji
+      quantity
+      RecipeId
+      UserId
+      createdAt
+      updatedAt
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+
+const findRecipe = gql`
+query FindRecipe($findRecipeId: ID!) {
+  findRecipe(id: $findRecipeId) {
+    id
+    title
+    image
+    description
+    videoUrl
+    origin
+    portion
+    cookingTime
+    UserId
+    Steps {
+      image
+      instruction
+    }
+    Ingredients {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+
+
 const { width, height } = Dimensions.get('window')
 
-export default function FormAddBahan() {
+export default function FormAddBahan({ route }) {
+    const { loading: loadingRecipe, error: errorRecipe, data: dataRecipe, refetch: refetchRecipe } = useQuery(findRecipe, {
+        variables: {
+            findRecipeId: route?.params?.recipeId
+        }
+    });
+
+
+    useEffect(() => {
+        refetchRecipe()
+    }, [route])
+
+
+
     const navigation = useNavigation();
-    const [ingredients, setIngredients] = useState([{ "name": "" }])
-    const [steps, setSteps] = useState(
-        [
-            {
-                "image": '',
-                "instruction": ""
-            }
-        ]
+    const [ingredients, setIngredients] = useState(dataRecipe ? dataRecipe.findRecipe.Ingredients : [{ "name": "" }])
+    const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe.Steps : [
+        {
+            "image": '',
+            "instruction": ""
+        }
+    ]
     )
 
     const [uploadForm, { data, loading, error }] = useMutation(mutationUpload, {
@@ -34,15 +102,29 @@ export default function FormAddBahan() {
             console.log(err, "error graph");
         }
     });
+    const [uploadEditForm, { data: dataEdit, loading: loadingEdit, error: errorEdit }] = useMutation(updateRecipe, {
+        onError: (err) => {
+            console.log(err, "error graph");
+        }
+    });
 
     const uploadRecipe = async () => {
         try {
-            console.log(recipeForm());
-            await uploadForm({
-                variables: {
-                    newRecipe: recipeForm()
-                }
-            });
+            if (route?.params?.recipeId) {
+                await uploadEditForm({
+                    variables: {
+                        newRecipe: recipeForm(),
+                        recipeId: route?.params?.recipeId
+                    }
+                })
+            } else {
+                console.log(recipeForm());
+                await uploadForm({
+                    variables: {
+                        newRecipe: recipeForm()
+                    }
+                });
+            }
         } catch (error) {
             console.log(error.errors, "<---------");
         }
@@ -141,13 +223,12 @@ export default function FormAddBahan() {
                     </TouchableOpacity>
                     <Pressable style={styles.buttonn} onPress={() => {
                         recipeForm({ ...recipeForm(), ingredients, steps })
-                        console.log(loading, 'ini loading');
-                        // uploadRecipe()
-                        // console.log(recipeForm());
+                        uploadRecipe()
+                        console.log(recipeForm());
                         // navigation.navigate('HomeTab')
                     }
                     }>
-                        <Text style={styles.text}>Submit Recipe</Text>
+                        <Text style={styles.text}>{route?.params?.recipeId ? "Ubah Resep" : "Buat Resep"}</Text>
                     </Pressable>
                 </View>
             </ImageBackground>

@@ -42,7 +42,7 @@ export default function AIPage() {
           <Text style={styles.text}>{value.user}</Text>
         </View>
         <View style={styles.button1}>
-          {loading ? <ActivityIndicator size="large" color="#00ff00" /> : <Text style={styles.text1}>{value.bot ? value.bot : ""}</Text>}
+          {loading ? <ActivityIndicator size="large" color="white" /> : <Text style={styles.text1}>{value.bot ? value.bot : ""}</Text>}
         </View>
       </View>
     )
@@ -126,7 +126,7 @@ const styles = StyleSheet.create({
 
   indicatorContainer: {
     width: width - 30,
-    height: height - 670,
+    height: 60,
     padding: 20,
     paddingTop: 0,
     margin: 15,
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   button1: {
     marginTop: 20,
-    marginBottom: 50,
+    marginBottom: 10,
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 10,
@@ -164,7 +164,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     backgroundColor: "#EF551D",
     zIndex: 10,
-    height: height - 670,
+    height: 60,
   },
   text: {
     fontSize: 14,

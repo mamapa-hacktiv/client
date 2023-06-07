@@ -73,7 +73,7 @@ export default function Favorit() {
                 console.error("Error retrieving access token:", error);
             });
         refetch()
-    }, [isfocused]);
+    }, [isfocused, dataDelete]);
 
 
     function favorite(favoriteId) {
@@ -113,7 +113,7 @@ export default function Favorit() {
         if (data.findFavorite.length === 0) {
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <Text>belum ada nih datanya</Text>
+                    <Text>Kamu belum mempunyai resep favorit, mulailah mencari!</Text>
                 </View>
             )
 
@@ -124,8 +124,8 @@ export default function Favorit() {
                         {data.findFavorite ? <FlatList data={data.findFavorite} numColumns={2}
                             renderItem={({ item }) => {
                                 return (
-                                    <View style={{ flex: 1 }}>
-                                        <Pressable style={{ ...styles.container }} key={item.Recipe.id} onPress={() => navigation.navigate('Detail', { id: item.Recipe.id })} >
+                                    <View style={{ flex: 1 }} key={item.Recipe.id}>
+                                        <Pressable style={{ ...styles.container }} onPress={() => navigation.navigate('Detail', { id: item.Recipe.id })} >
 
                                             <Image style={styles.photo} source={{ uri: item.Recipe.image }} />
                                             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>

@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  ToastAndroid
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -20,6 +21,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { gql, useQuery, useMutation } from '@apollo/client';
 import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fetchRecipe = gql`
 query FindRecipes {
@@ -91,6 +93,7 @@ const IMAGES = [
 export default function HomePage() {
   const isfocused = useIsFocused()
   const [isfavorit, setIsFavorit] = useState(false)
+  const [access_token, setAccessToken] = useState("");
   const navigation = useNavigation();
   const { loading, error, data, refetch } = useQuery(fetchRecipe);
   const { loading: loadingFavorite, error: errorFavorite, data: dataFavorite, refetch: refetchFavorite } = useQuery(FindFavorite);
@@ -106,10 +109,19 @@ export default function HomePage() {
     }
   });
 
+
+
   useEffect(() => {
+    AsyncStorage.getItem("access_token")
+      .then(value => {
+        setAccessToken(value || "");
+      })
+      .catch(error => {
+        console.error("Error retrieving access token:", error);
+      });
     refetch()
-    console.log('masuk');
-  }, [isfocused]);
+    refetchFavorite()
+  }, [isfocused, dataDelete, dataCreate]);
 
   function limitStringTo20Words(inputString) {
     var words = inputString.split(" ");
@@ -143,6 +155,14 @@ export default function HomePage() {
     return selectedElements;
   }
 
+  const showToastWithGravity = () => {
+    ToastAndroid.show(
+      'Kamu harus login dulu untuk menggunakan fitur favorit ini!',
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+    );
+  };
+
   function favorite(id) {
     if (dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == id)) {
       return <FontAwesomeIcon icon={faHeart} beat size={25} color={'#EB5757'} />
@@ -150,7 +170,7 @@ export default function HomePage() {
       return <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />
     }
   }
-
+  console.log(dataFavorite);
   if (loading || loadingFavorite) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
@@ -221,7 +241,7 @@ export default function HomePage() {
 
 
                 <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
-                  {data.findRecipes.map((el, index) => {
+                  {data?.findRecipes?.map((el, index) => {
                     return (
                       <View key={index} style={{ position: 'relative' }}>
                         <Pressable style={styles.container} onPress={() => navigation.navigate('Detail', { id: el.id })} >
@@ -232,26 +252,30 @@ export default function HomePage() {
                           <Text style={styles.descriptions}>{el.description ? limitStringTo20Words(el.description) : el.description}</Text>
                         </Pressable>
                         <Pressable style={{ zIndex: 1, position: 'absolute', right: 5, padding: 10, top: 0 }} onPress={() => {
-                          const result = dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == el.id)
-                          if (result) {
-                            deleteFavorites({
-                              variables: {
-                                favoriteId: result.id
-                              }
-                            })
-                            refetchFavorite()
-                            refetch()
+                          if (access_token) {
+                            const result = dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == el.id)
+                            if (result) {
+                              deleteFavorites({
+                                variables: {
+                                  favoriteId: result.id
+                                }
+                              })
+                              refetchFavorite()
+                              refetch()
+                            } else {
+                              createFavorites({
+                                variables: {
+                                  recipeId: el.id
+                                }
+                              })
+                              refetchFavorite()
+                              refetch()
+                            }
                           } else {
-                            createFavorites({
-                              variables: {
-                                recipeId: el.id
-                              }
-                            })
-                            refetchFavorite()
-                            refetch()
+                            showToastWithGravity()
                           }
                         }}>
-                          {favorite(el.id)}
+                          {dataFavorite.findFavorite !== null ? favorite(el.id) : <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />}
 
                         </Pressable>
                       </View>

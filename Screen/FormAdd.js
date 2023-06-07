@@ -5,7 +5,7 @@ import { faArrowRight, faCamera } from '@fortawesome/free-solid-svg-icons'
 import { useIsFocused, useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import ReactNativeFile from "apollo-upload-client/public/ReactNativeFile.js";
-import { useMutation, gql, useReactiveVar } from '@apollo/client';
+import { useMutation, gql, useReactiveVar, useQuery } from '@apollo/client';
 import { recipeForm } from '../graphql/variable';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -21,31 +21,74 @@ const mutationUpload = gql`
 }
 `;
 
-export default function FormAdd() {
-  const [image, setImage] = useState(null);
+const findRecipe = gql`
+query FindRecipe($findRecipeId: ID!) {
+  findRecipe(id: $findRecipeId) {
+    id
+    title
+    image
+    description
+    videoUrl
+    origin
+    portion
+    cookingTime
+    UserId
+    Steps {
+
+      image
+      instruction
+    }
+    Ingredients {
+
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+`;
+
+export default function FormAdd({ route }) {
   const isfocused = useIsFocused()
+  const { loading: loadingRecipe, error: errorRecipe, data: dataRecipe, refetch: refetchRecipe } = useQuery(findRecipe, {
+    variables: {
+      findRecipeId: route?.params?.recipeId
+    }
+  });
+  const [form, setForm] = useState({})
+  console.log(route, 'asdkfjlkasd');
+
+  useEffect(() => {
+    refetchRecipe()
+
+    setForm({
+      "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
+      "image": dataRecipe ? dataRecipe.findRecipe?.image : [],
+      "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
+      "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
+      "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
+      "portion": dataRecipe ? dataRecipe.findRecipe?.portion : '',
+      "cookingTime": dataRecipe ? dataRecipe.findRecipe?.cookingTime : null,
+      "ingredients": dataRecipe ? dataRecipe.findRecipe?.Ingredients : [
+        {
+          "name": "null"
+        }
+      ],
+      "steps": dataRecipe ? dataRecipe.findRecipe?.Steps : [
+        {
+          "image": "null",
+          "instruction": "null"
+        }
+      ],
+    })
+  }, [route, isfocused, dataRecipe])
+
+
+
+  const [image, setImage] = useState(null);
+
   const [access_token, setAccessToken] = useState("");
   const navigation = useNavigation()
-  const [form, setForm] = useState({
-    "title": "",
-    "image": [],
-    "description": "",
-    "videoUrl": "",
-    "origin": "",
-    "portion": '',
-    "cookingTime": null,
-    "ingredients": [
-      {
-        "name": "null"
-      }
-    ],
-    "steps": [
-      {
-        "image": "null",
-        "instruction": "null"
-      }
-    ],
-  })
 
 
   useEffect(() => {
@@ -137,17 +180,17 @@ export default function FormAdd() {
   if (!access_token) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Image style={{ width : 300, height :200 }} source={require('../assets/ilustratorlogin.png')}>
-      </Image>
-         <Text style={{ fontWeight: '200'}}> Maaf! kamu harus login ke akun kamu terlebih dahulu</Text>
+        <Image style={{ width: 300, height: 200 }} source={require('../assets/ilustratorlogin.png')}>
+        </Image>
+        <Text style={{ fontWeight: '200' }}> Maaf! kamu harus login ke akun kamu terlebih dahulu</Text>
 
-         <Pressable
-             style={{ ...styles.button, marginTop: 10 }}
-             onPress={() => navigation.navigate('Profiles')}
-         >
-             <Text style={styles.text}><MaterialCommunityIcons name="login" color={"#ffffff"} size={15} />  Login</Text>
-         </Pressable>
-     </View>
+        <Pressable
+          style={{ ...styles.button, marginTop: 10 }}
+          onPress={() => navigation.navigate('Profiles')}
+        >
+          <Text style={styles.text}><MaterialCommunityIcons name="login" color={"#ffffff"} size={15} />  Login</Text>
+        </Pressable>
+      </View>
     )
   }
 
@@ -183,9 +226,8 @@ export default function FormAdd() {
           <TextInput style={styles.input} placeholder="Lama memasak" onChangeText={(e) => onchange(e, 'cookingTime')} value={form.cookingTime} />
           <TextInput style={styles.input} placeholder="Video URL" onChangeText={(e) => onchange(e, 'videoUrl')} value={form.videoUrl} />
           <Pressable style={{ ...styles.buttonn, }} onPress={() => {
-            navigation.navigate('FormAddBahan')
+            navigation.navigate('Tambahkan Bahan dan Langkah', { recipeId: route?.params?.recipeId })
             recipeForm({ ...recipeForm(), ...form })
-
           }}>
             <Text style={styles.text}>Bahan & Langkah <FontAwesomeIcon icon={faArrowRight} style={{ color: "#ffffff", }} /></Text>
           </Pressable>
@@ -233,7 +275,7 @@ const styles = StyleSheet.create({
   button: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical:7 ,
+    paddingVertical: 7,
     paddingHorizontal: 15,
     borderRadius: 4,
     elevation: 3,
