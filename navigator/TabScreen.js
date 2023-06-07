@@ -15,60 +15,79 @@ import Chatbox from "../components/Chat";
 const Tab = createBottomTabNavigator();
 
 export default function TabScreen() {
-  return (
-    <Tab.Navigator
-      initialRouteName="HomeTab"
-      screenOptions={{
-        tabBarActiveTintColor: "#e91e63",
-      }}
-    >
-      <Tab.Screen
-        name="HomeTab"
-        component={HomePage}
-        options={{
-          headerShown: false,
-          tabBarLabel: "HomeTab",
-          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="home" color={color} size={size} />,
-        }}
-      />
-      <Tab.Screen
-        name="Favorit"
-        component={MessagesScreen}
-        options={{
-          tabBarLabel: "Favorit",
-          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="heart" color={color} size={size} />,
-        }}
-      />
 
+    return (
+        <Tab.Navigator
+            initialRouteName="HomeTab"
+            screenOptions={{
+                tabBarActiveTintColor: '#EF551D',
+            }}
+        >
+            <Tab.Screen
+                name="HomeTab"
+                component={HomePage}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'HomeTab',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="home" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Favorit"
+                component={Favorit}
+                options={{
 
-      <Tab.Screen
-        name="FormAdd"
-        component={FormAdd}
-        options={{
-          tabBarLabel: "Add Recipe",
-          tabBarIcon: ({ color, size }) => <FontAwesomeIcon icon={faPlus} color={color} size={size} />,
-        }}
-      />
-      {/* <Tab.Screen
-        name="Profile"
-        component={Chatbox}
-        options={{
-          headerShown: false,
-          tabBarLabel: "Profile",
-          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />,
-        }}
-      /> */}
-      <Tab.Screen
-        name="Profiles"
-        component={Profil}
-        options={{
-          headerShown: false,
-          tabBarLabel: "Profiles",
-          tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="account" color={color} size={size} />,
-        }}
-      />
-    </Tab.Navigator>
-  );
+                    tabBarLabel: 'Favorit',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="heart" color={color} size={size} />
+                    ),
+                }}
+            />
+            <Tab.Screen
+                name="Message"
+                component={MessagesScreen}
+                options={{
+                    tabBarLabel: "Message",
+                    tabBarIcon: ({ color, size }) => <MaterialCommunityIcons name="heart" color={color} size={size} />,
+                }}
+            />
+            <Tab.Screen
+                name="FormAdd"
+                component={FormAdd}
+                options={{
+                    tabBarLabel: 'Add Recipe',
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesomeIcon icon={faPlus} color={color} size={size} />
+                    ),
+                }}
+            />
+            {/* <Tab.Screen
+                name="Profile"
+                component={LoginForm}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Profile',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
+                }}
+            /> */}
+            <Tab.Screen
+                name="Profiles"
+                component={Profil}
+                options={{
+                    headerShown: false,
+                    tabBarLabel: 'Profiles',
+                    tabBarIcon: ({ color, size }) => (
+                        <MaterialCommunityIcons name="account" color={color} size={size} />
+                    ),
+                }}
+            />
+        </Tab.Navigator>
+
+    );
 }
 
 const styles = StyleSheet.create({});

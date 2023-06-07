@@ -1,5 +1,5 @@
 
-import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image, Dimensions , ScrollView} from 'react-native'
+import { StyleSheet, Text, View, ImageBackground, Button, Pressable, Image, Dimensions, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import { useNavigation } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -62,51 +62,51 @@ export default function LoginForm() {
         <ScrollView>
             <>
 
-            <View style={{ flex: 2,  alignItems: 'center' }}>
-                <View style={{ ...styles.textButton,  justifyContent : 'flex-start' }}>
-                    <Text style={{ ...styles.textHeaders,  position : 'absolute', color : 'black', opacity : 0.5, zIndex : 10 }}>Silahkan login terlebih dahulu</Text>
-                </View>
-                <View style={{ marginTop : 100}}>
+                <View style={{ flex: 2, alignItems: 'center' }}>
+                    <View style={{ ...styles.textButton, justifyContent: 'flex-start' }}>
+                        <Text style={{ ...styles.textHeaders, position: 'absolute', color: 'black', opacity: 0.5, zIndex: 10 }}>Silahkan login terlebih dahulu</Text>
+                    </View>
+                    <View style={{ marginTop: 100 }}>
 
-                <Image style={{ width: 300, height: 300, }} source={require('../assets/ilustratorlogin2.png')}>
-                </Image>
-                </View>
-              
-            
-            </View>
-            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <View style={{ marginBottom: 20, padding: 40, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: '90%' , height: "85%" , elevation : 10}}>
-                    <View style={{ marginBottom: 20 }}>
-                        <TextInput label="Email"
-                            left={<TextInput.Icon icon="email" />}
-                            mode="outlined"
-                            style={{  justifyContent: 'flex-start' }}
-                            onChangeText={(e) => setLoginForm({ ...loginForm, email: e })} value={loginForm.email}
-                        />
-                        <TextInput label="password"
-                            left={<TextInput.Icon icon="lock" />}
-                            mode="outlined"
-                            secureTextEntry={secure}
-                            style={{}}
-                            right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
-                            onChangeText={(e) => setLoginForm({ ...loginForm, password: e })} value={loginForm.password}
-                        />
+                        <Image style={{ width: 300, height: 300, }} source={require('../assets/ilustratorlogin2.png')}>
+                        </Image>
                     </View>
-                    <View style={styles.button}>
-                        <Pressable style={styles.buttonn} onPress={clickHandle}>
-                            <Text style={styles.text}>Sign In</Text>
-                        </Pressable>
-                    </View>
-                    <View style={styles.button}>
-                        <Pressable onPress={() => navigation.navigate('RegisterForm')}>
-                            <Text style={styles.text1}>Don't have account? click me</Text>
-                        </Pressable>
-                    </View>
-                </View>
 
-            </View>
-        </>
-            </ScrollView>
+
+                </View>
+                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ marginBottom: 20, padding: 40, backgroundColor: 'rgba(255,255,255,1)', borderRadius: 20, width: '90%', height: "85%", elevation: 10 }}>
+                        <View style={{ marginBottom: 20 }}>
+                            <TextInput label="Email"
+                                left={<TextInput.Icon icon="email" />}
+                                mode="outlined"
+                                style={{ justifyContent: 'flex-start' }}
+                                onChangeText={(e) => setLoginForm({ ...loginForm, email: e })} value={loginForm.email}
+                            />
+                            <TextInput label="password"
+                                left={<TextInput.Icon icon="lock" />}
+                                mode="outlined"
+                                secureTextEntry={secure}
+                                style={{}}
+                                right={<TextInput.Icon icon="eye" onPress={visibilityHandle} />}
+                                onChangeText={(e) => setLoginForm({ ...loginForm, password: e })} value={loginForm.password}
+                            />
+                        </View>
+                        <View style={styles.button}>
+                            <Pressable style={styles.buttonn} onPress={clickHandle}>
+                                <Text style={styles.text}>Sign In</Text>
+                            </Pressable>
+                        </View>
+                        <View style={{ ...styles.button }}>
+                            <Pressable onPress={() => navigation.navigate('RegisterForm')}>
+                                <Text style={styles.text1}>Don't have account? click me</Text>
+                            </Pressable>
+                        </View>
+                    </View>
+
+                </View>
+            </>
+        </ScrollView>
     );
 };
 
@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     button: {
+        paddingTop: 5,
     },
     textButton: {
         alignItems: 'center'
@@ -135,8 +136,9 @@ const styles = StyleSheet.create({
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
+        opacity: 0.5,
         color: 'black',
-        textAlign : 'center'
+        textAlign: 'center'
     },
     text: {
         fontSize: 20,
