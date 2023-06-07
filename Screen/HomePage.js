@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -8,7 +8,8 @@ import {
   TouchableOpacity,
   ScrollView,
   FlatList,
-  ActivityIndicator
+  ActivityIndicator,
+  ToastAndroid
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -16,10 +17,11 @@ import { Dimensions, Image } from "react-native";
 import { Carousel } from "react-native-auto-carousel";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome'
-import {  faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
-import { useNavigation } from '@react-navigation/native';
-import { gql, useQuery } from '@apollo/client';
+import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import { gql, useQuery, useMutation } from '@apollo/client';
 import { faClock, faHeart } from "@fortawesome/free-solid-svg-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const fetchRecipe = gql`
 query FindRecipes {
@@ -29,6 +31,29 @@ query FindRecipes {
     image
     title
     description
+  }
+}
+`;
+const FindFavorite = gql`
+query FindFavorite {
+  findFavorite {
+    id
+    RecipeId
+    UserId
+  }
+}
+`;
+const deleteFavorite = gql`
+mutation DeleteFavorite($favoriteId: ID) {
+  deleteFavorite(favoriteId: $favoriteId) {
+    message
+  }
+}
+`;
+const CreateFavorite = gql`
+mutation CreateFavorite($recipeId: ID) {
+  createFavorite(recipeId: $recipeId) {
+    message
   }
 }
 `;
@@ -66,9 +91,37 @@ const IMAGES = [
 
 
 export default function HomePage() {
+  const isfocused = useIsFocused()
   const [isfavorit, setIsFavorit] = useState(false)
+  const [access_token, setAccessToken] = useState("");
   const navigation = useNavigation();
-  const { loading, error, data } = useQuery(fetchRecipe);
+  const { loading, error, data, refetch } = useQuery(fetchRecipe);
+  const { loading: loadingFavorite, error: errorFavorite, data: dataFavorite, refetch: refetchFavorite } = useQuery(FindFavorite);
+
+  const [deleteFavorites, { data: dataDelete, loading: loadingDelete, error: errorDelete }] = useMutation(deleteFavorite, {
+    onError: (err) => {
+      console.log(err, "error graph");
+    }
+  });
+  const [createFavorites, { data: dataCreate, loading: loadingCreate, error: errorCreate }] = useMutation(CreateFavorite, {
+    onError: (err) => {
+      console.log(err, "error graph");
+    }
+  });
+
+
+
+  useEffect(() => {
+    AsyncStorage.getItem("access_token")
+      .then(value => {
+        setAccessToken(value || "");
+      })
+      .catch(error => {
+        console.error("Error retrieving access token:", error);
+      });
+    refetch()
+    refetchFavorite()
+  }, [isfocused, dataDelete, dataCreate]);
 
   function limitStringTo20Words(inputString) {
     var words = inputString.split(" ");
@@ -92,7 +145,6 @@ export default function HomePage() {
     while (currentIndex > 0) {
       randomIndex = Math.floor(Math.random() * currentIndex);
       currentIndex--;
-
       temporaryValue = shuffledArray[currentIndex];
       shuffledArray[currentIndex] = shuffledArray[randomIndex];
       shuffledArray[randomIndex] = temporaryValue;
@@ -103,11 +155,23 @@ export default function HomePage() {
     return selectedElements;
   }
 
+  const showToastWithGravity = () => {
+    ToastAndroid.show(
+      'Kamu harus login dulu untuk menggunakan fitur favorit ini!',
+      ToastAndroid.LONG,
+      ToastAndroid.TOP,
+    );
+  };
 
-  console.log();
-
-
-  if (loading) {
+  function favorite(id) {
+    if (dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == id)) {
+      return <FontAwesomeIcon icon={faHeart} beat size={25} color={'#EB5757'} />
+    } else {
+      return <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />
+    }
+  }
+  console.log(dataFavorite);
+  if (loading || loadingFavorite) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
@@ -118,89 +182,130 @@ export default function HomePage() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <ScrollView>
-        <View style={{ flex: 2, height: 300 }}>
-          {
-          getRandomElementsFromArray(data.findRecipes, 4).length > 0 &&
-            <Carousel
-              data={getRandomElementsFromArray(data.findRecipes, 4)}
-              renderItem={(item, index) => (
-                <Pressable key={index} onPress={() => navigation.navigate('Detail', { id: item.id })}>
-                  <View
-                    key={index}
-                    style={{
-                      height: 250, position: 'relative',
-                      width: DEVICE_WIDTH,
-                    }}
-                    colors={['green', 'red']}>
-                    <View style={{ position: 'absolute', zIndex: 3, bottom: 20, marginLeft: 20, }}>
-                      <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white', elevation: 100 }} >{item.title}</Text>
-                      <Text style={styles.textTime} ><FontAwesomeIcon icon={faClock} color={"white"}></FontAwesomeIcon> {item.cookingTime}</Text>
-                    </View>
-                    <LinearGradient style={{position : 'absolute',height: 310, width : DEVICE_WIDTH , top : 0, left : 0}} colors={['transparent', 'rgba(0,0,0,0.8)']}/>
-                    <Image
-                      src={item.image}
-                      style={{
-                        height: 310,
-                        width: DEVICE_WIDTH,
-                        resizeMode: "cover",
-                        position: "relative",
-                        zIndex : -1
-                      }}
-                      />
-                  </View>
-                </Pressable>
-              )}
-            />
-            }
-          <Image style={{ position: "absolute", marginTop: 220, width: "100%" }} source={require('../assets/vector12.png')} />
-        </View>
-        <View style={{ flex: 3, backgroundColor: 'white' }}>
-          <View style={styles.fixToText}>
-            <Pressable
-              style={styles.button1}
-              onPress={() => navigation.navigate('SearchPage')}
-            >
-              <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} beat size={13} style={{ color: "#98A8BA", }} /> Cari Resep</Text>
-            </Pressable>
-            <Pressable
-              style={styles.button}
-              onPress={() => navigation.navigate('Chat with AI')}
-            >
-              <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Tanya Saya!</Text>
-            </Pressable>
-          </View>
-
-          <Text style={styles.textHeaders}>Resep Terbaru</Text>
-
-          {
-          data.findRecipes && 
-          <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
-            {data.findRecipes.map((el, index) => {
-              return ( 
-                <View key={index} style={{position : 'relative'}}>
-                <Pressable style={styles.container} onPress={() => navigation.navigate('Detail', { id: el.id })} >
-                  <View>
-                    <Image style={styles.photo} source={{ uri: el.image }} />
-                  </View>
-                    <Text style={styles.title}>{el.title}</Text>
-                    <Text style={styles.descriptions}>{el.description ? limitStringTo20Words(el.description) : el.description}</Text>
-                </Pressable>
-                    <Pressable style={{ zIndex : 1 , position : 'absolute',marginLeft : 130, marginTop : 10, }} onPress={() => {
-                      if(isfavorit){
-                        setIsFavorit(false)
-                      }else{
-                        setIsFavorit(true)
-                      }
-                    }}>
-                    <FontAwesomeIcon icon={faHeart} beat size={21}  color={isfavorit ? '#EB5757' : 'gray' } />
-                    </Pressable>
+        {
+          data ?
+            <>
+              <View style={{ flex: 2, height: 300 }}>
+                {
+                  getRandomElementsFromArray(data.findRecipes, 4).length > 0 &&
+                  <Carousel
+                    data={getRandomElementsFromArray(data.findRecipes, 4)}
+                    renderItem={(item, index) => (
+                      <Pressable key={index} onPress={() => navigation.navigate('Detail', { id: item.id })}>
+                        <View
+                          key={index}
+                          style={{
+                            height: 250, position: 'relative',
+                            width: DEVICE_WIDTH,
+                          }}
+                          colors={['green', 'red']}>
+                          <View style={{ position: 'absolute', zIndex: 3, bottom: 20, marginLeft: 20, }}>
+                            <Text style={{ fontWeight: 'bold', fontSize: 20, color: 'white', elevation: 100 }} >{item.title}</Text>
+                            <Text style={styles.textTime} ><FontAwesomeIcon icon={faClock} color={"white"}></FontAwesomeIcon> {item.cookingTime}</Text>
+                          </View>
+                          <LinearGradient style={{ position: 'absolute', height: 310, width: DEVICE_WIDTH, top: 0, left: 0 }} colors={['transparent', 'rgba(0,0,0,0.8)']} />
+                          <Image
+                            src={item.image}
+                            style={{
+                              height: 310,
+                              width: DEVICE_WIDTH,
+                              resizeMode: "cover",
+                              position: "relative",
+                              zIndex: -1
+                            }}
+                          />
+                        </View>
+                      </Pressable>
+                    )}
+                  />
+                }
+                <Image style={{ position: "absolute", marginTop: 220, width: "100%" }} source={require('../assets/vector12.png')} />
+              </View>
+              <View style={{ flex: 3, backgroundColor: 'white' }}>
+                <View style={styles.fixToText}>
+                  <Pressable
+                    style={styles.button1}
+                    onPress={() => navigation.navigate('SearchPage')}
+                  >
+                    <Text style={styles.text1}><FontAwesomeIcon icon={faMagnifyingGlass} beat size={13} style={{ color: "#98A8BA", }} /> Cari Resep</Text>
+                  </Pressable>
+                  <Pressable
+                    style={styles.button}
+                    onPress={() => navigation.navigate('Chat with AI')}
+                  >
+                    <Text style={styles.text}><MaterialCommunityIcons name="robot-happy" color={"#ffffff"} size={21} /> Tanya Saya!</Text>
+                  </Pressable>
                 </View>
-              )
-            })}
-          </View>
-          }
 
-        </View>
+                <Text style={styles.textHeaders}>Resep Terbaru</Text>
+
+
+                <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly', marginTop: 10 }} >
+                  {data?.findRecipes?.map((el, index) => {
+                    return (
+                      <View key={index} style={{ position: 'relative' }}>
+                        <Pressable style={styles.container} onPress={() => navigation.navigate('Detail', { id: el.id })} >
+                          <View>
+                            <Image style={styles.photo} source={{ uri: el.image }} />
+                          </View>
+                          <Text style={styles.title}>{el.title}</Text>
+                          <Text style={styles.descriptions}>{el.description ? limitStringTo20Words(el.description) : el.description}</Text>
+                        </Pressable>
+                        <Pressable style={{ zIndex: 1, position: 'absolute', right: 5, padding: 10, top: 0 }} onPress={() => {
+                          if (access_token) {
+                            const result = dataFavorite.findFavorite.find(({ RecipeId }) => RecipeId == el.id)
+                            if (result) {
+                              deleteFavorites({
+                                variables: {
+                                  favoriteId: result.id
+                                }
+                              })
+                              refetchFavorite()
+                              refetch()
+                            } else {
+                              createFavorites({
+                                variables: {
+                                  recipeId: el.id
+                                }
+                              })
+                              refetchFavorite()
+                              refetch()
+                            }
+                          } else {
+                            showToastWithGravity()
+                          }
+                        }}>
+                          {dataFavorite.findFavorite !== null ? favorite(el.id) : <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />}
+
+                        </Pressable>
+                      </View>
+                    )
+                  })}
+                  {data.findRecipes.length % 2 !== 0 && <View style={{ position: 'relative' }}>
+                    <View key={"index"} style={{
+                      overflow: "hidden",
+                      gap: 10,
+                      marginLeft: RECIPE_ITEM_MARGIN,
+                      marginRight: RECIPE_ITEM_MARGIN,
+                      marginBottom: 10,
+                      width: (SCREEN_WIDTH - (recipeNumColums + 10) * RECIPE_ITEM_MARGIN) / recipeNumColums,
+                      height: RECIPE_ITEM_HEIGHT + 75,
+                      borderColor: '#cccccc',
+
+                      backgroundColor: 'white',
+
+                    }} >
+
+                    </View>
+                  </View>}
+
+                </View>
+
+              </View>
+            </>
+            : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+              <ActivityIndicator size="large" />
+            </View>}
       </ScrollView>
     </SafeAreaView>
   );
@@ -231,8 +336,8 @@ const styles = StyleSheet.create({
   },
   overlay: {
     flex: 1,
-    alignItems : 'center'
-},
+    alignItems: 'center'
+  },
   title: {
     fontSize: 13,
     fontWeight: 'bold',

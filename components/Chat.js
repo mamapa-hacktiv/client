@@ -1,9 +1,12 @@
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+
+
 import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import * as TalkRn from "@talkjs/expo";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import { gql, useQuery } from "@apollo/client";
 
 const GetUser = gql`
@@ -18,6 +21,17 @@ const GetUser = gql`
 `;
 
 export default function ChatScreen(obj) {
+
+  // const navigation = useNavigation();
+  const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(GetUser);
+  console.log(errorUser, dataUser, "<<ini data");
+
+  console.log("obj : << ini route.params", obj.route.params);
+  const id = obj.route.params.id;
+  const name = obj.route.params.name;
+  const email = obj.route.params.email;
+  const photoUrl = obj.route.params.image;
+
   const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
   console.log(dataUser, "<<ini data");
 
@@ -39,6 +53,7 @@ export default function ChatScreen(obj) {
     navigation.goBack();
   }
 
+
   const me = {
     id: dataUser?.getUser?.id,
     name: dataUser?.getUser?.username,
@@ -47,10 +62,12 @@ export default function ChatScreen(obj) {
   };
 
   const other = {
-    id: dataUser?.getUser?.id,
-    name: dataUser?.getUser?.username,
-    email: dataUser?.getUser?.email,
-    photoUrl: "ini photo",
+
+    id,
+    name,
+    email,
+    photoUrl,
+
     welcomeMessage: "Hi, Whats'up?",
     role: "default",
   };
@@ -63,10 +80,7 @@ export default function ChatScreen(obj) {
   return (
     <View style={styles.container}>
       <TalkRn.Session appId="tUXyvBIY" me={me}>
-        {/* <TalkRn.ConversationList
-          me={me}
-          onSelectConversation={() => navigateToChat()}
-        /> */}
+
         <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
       </TalkRn.Session>
     </View>
