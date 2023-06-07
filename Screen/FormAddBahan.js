@@ -87,9 +87,16 @@ export default function FormAddBahan({ route }) {
 
 
 
+
     const navigation = useNavigation();
-    const [ingredients, setIngredients] = useState(dataRecipe ? dataRecipe.findRecipe.Ingredients : [{ "name": "" }])
-    const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe.Steps : [
+    const [ingredients, setIngredients] = useState(dataRecipe ? dataRecipe.findRecipe?.Ingredients.map(el => {
+        delete el.__typename
+        return el
+    }) : [{ "name": "" }])
+    const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe?.Steps.map(el => {
+          delete el.__typename
+          return el
+        }) : [
         {
             "image": '',
             "instruction": ""
@@ -111,11 +118,13 @@ export default function FormAddBahan({ route }) {
 
     const uploadRecipe = async () => {
         try {
+            console.log(route?.params?.recipeId, 'ini ada nggak');
             if (route?.params?.recipeId) {
+                console.log(recipeForm(), 'hasil edit');
                 await uploadEditForm({
                     variables: {
-                        newRecipe: recipeForm(),
-                        recipeId: route?.params?.recipeId
+                    "newRecipe": recipeForm(), 
+                    "recipeId": +route?.params?.recipeId
                     }
                 })
             } else {
@@ -194,6 +203,15 @@ export default function FormAddBahan({ route }) {
     // if (loading) return <ActivityIndicator size="large" />
 
 
+  if (loadingRecipe || loadingEdit || loading ) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" />
+      </View>
+    )
+  }
+
+
     return (
         <ScrollView>
             <ImageBackground
@@ -225,8 +243,7 @@ export default function FormAddBahan({ route }) {
                     <Pressable style={styles.buttonn} onPress={() => {
                         recipeForm({ ...recipeForm(), ingredients, steps })
                         uploadRecipe()
-                        console.log(recipeForm());
-
+                        console.log(recipeForm(), 'ini tolong');
                     }
                     }>
                         <Text style={styles.text}>{route?.params?.recipeId ? "Ubah Resep" : "Buat Resep"}</Text>

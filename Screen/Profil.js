@@ -139,15 +139,17 @@ export default function Profil() {
                                                             <View style={styles.fixToText}>
                                                                 <Pressable
                                                                     style={styles.button1}
-                                                                    onPress={() => navigation.navigate('Edit Recipe', { recipeId: item.id })}
+                                                                    onPress={() => navigation.navigate('Ubah Resep mu', { recipeId: item.id })}
                                                                 >
-                                                                    <Text style={styles.text}> Edit</Text>
+                                                                    <Text style={styles.text}>Ubah</Text>
                                                                 </Pressable>
                                                                 <Pressable
                                                                     style={styles.button}
                                                                     onPress={() => createTwoButtonAlert(item.id)}
                                                                 >
-                                                                    <Text style={styles.text}>Delete</Text>
+                                                                    <Text style={styles.text}>
+                                                                        Hapus
+                                                                    </Text>
                                                                 </Pressable>
                                                             </View>
                                                         </View>
@@ -166,7 +168,6 @@ export default function Profil() {
     } else {
         return <LoginForm />
     }
-
 
 
 }

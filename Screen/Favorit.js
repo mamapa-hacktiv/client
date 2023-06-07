@@ -149,8 +149,8 @@ export default function Favorit() {
         } else {
             return (
                 <>
-                    <View>
-                        {data.findFavorite ? <FlatList data={data.findFavorite} numColumns={2}
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                        {data?.findFavorite ? <FlatList data={data.findFavorite} numColumns={2}
                             renderItem={({ item }) => {
                                 return (
                                     <View style={{ flex: 1 }} key={item.Recipe.id}>
@@ -174,7 +174,7 @@ export default function Favorit() {
                                 )
                             }}
                         /> : <></>}
-
+                        
                     </View>
                 </>
             )

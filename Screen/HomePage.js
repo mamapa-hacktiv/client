@@ -9,7 +9,7 @@ import {
   ScrollView,
   FlatList,
   ActivityIndicator,
-  ToastAndroid
+  ToastAndroid,
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -88,8 +88,6 @@ const IMAGES = [
   }
 ];
 
-
-
 export default function HomePage() {
   const isfocused = useIsFocused()
 
@@ -121,10 +119,18 @@ export default function HomePage() {
         });
       refetch()
       refetchFavorite()
-    }, [])
+    }, [dataDelete, dataCreate, access_token])
   );
 
-
+  const createTwoButtonAlert = () =>
+    Alert.alert('Belum Login', 'Kamu harus login untuk menambahkan favorit resepmu', [
+      {
+        text: 'Cancel',
+        onPress: () => console.log('Cancel Pressed'),
+        style: 'cancel',
+      },
+      {text: 'LOGIN', onPress: () => navigation.navigate('Profiles')},
+    ]);
   // useEffect(() => {
   //   AsyncStorage.getItem("access_token")
   //     .then(value => {
@@ -295,7 +301,7 @@ export default function HomePage() {
                               refetch()
                             }
                           } else {
-                            showToastWithGravity()
+                            createTwoButtonAlert()
                           }
                         }}>
                           {dataFavorite.findFavorite !== null ? favorite(el.id) : <FontAwesomeIcon icon={faHeart} beat size={25} color={'gray'} />}

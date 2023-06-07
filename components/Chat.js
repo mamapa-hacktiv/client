@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-
-
-import { GiftedChat, InputToolbar } from "react-native-gifted-chat";
-import Icon from "react-native-vector-icons/MaterialCommunityIcons";
+import { View, Text, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from "react-native";
 import * as TalkRn from "@talkjs/expo";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { gql, useQuery } from "@apollo/client";
 
@@ -21,11 +16,6 @@ const GetUser = gql`
 `;
 
 export default function ChatScreen(obj) {
-
-  // const navigation = useNavigation();
-  const { loading: loadingUser, error: errorUser, data: dataUser } = useQuery(GetUser);
-  console.log(errorUser, dataUser, "<<ini data");
-
   console.log("obj : << ini route.params", obj.route.params);
   const id = obj.route.params.id;
   const name = obj.route.params.name;
@@ -35,25 +25,6 @@ export default function ChatScreen(obj) {
   const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
   console.log(dataUser, "<<ini data");
 
-  // console.log("obj :", obj.route.params);
-  // const id = obj.route.params.id;
-  // const name = obj.route.params.name;
-  // const photoUrl = obj.route.params.image;
-  // const id_sendiri = obj.route.params.id_sendiri;
-  // const name_sendiri = obj.route.params.name_sendiri;
-  // const image_sendiri = obj.route.params.image_sendiri;
-
-  // const [messages, setMessages] = useState(initialMessages);
-
-  function onSend(newMessages) {
-    setMessages((previousMessages) => GiftedChat.append(previousMessages, newMessages));
-  }
-
-  function navigateToMessages() {
-    navigation.goBack();
-  }
-
-
   const me = {
     id: dataUser?.getUser?.id,
     name: dataUser?.getUser?.username,
@@ -62,16 +33,21 @@ export default function ChatScreen(obj) {
   };
 
   const other = {
-
     id,
     name,
     email,
-    photoUrl,
-
     welcomeMessage: "Hi, Whats'up?",
     role: "default",
   };
 
+  console.log(me, "ini me", other, "ini dari other");
+  // return null;
+  if (loadingUser) {
+    return <ActivityIndicator />;
+  }
+  if (!me.id || !other.id) {
+    return null;
+  }
   const conversationBuilder = TalkRn.getConversationBuilder(TalkRn.oneOnOneId(me, other));
 
   conversationBuilder.setParticipant(me);
@@ -80,7 +56,6 @@ export default function ChatScreen(obj) {
   return (
     <View style={styles.container}>
       <TalkRn.Session appId="tUXyvBIY" me={me}>
-
         <TalkRn.Chatbox conversationBuilder={conversationBuilder} />
       </TalkRn.Session>
     </View>
