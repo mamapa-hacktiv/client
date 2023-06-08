@@ -23,13 +23,11 @@ const GetUser = gql`
 
 export default function MessagesScreen({ navigation, route }) {
   const [access_token, setAccessToken] = useState("");
-    const isfocused = useIsFocused()
+  const isfocused = useIsFocused()
 
   const [isLoading, setIsLoading] = useState(false);
   const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
-  console.log(dataUser, "<<ini data");
 
-  console.log(route);
 
   useEffect(() => {
     AsyncStorage.getItem("access_token")
@@ -75,14 +73,7 @@ export default function MessagesScreen({ navigation, route }) {
   }, []);
 
 
-  
-  if (loadingUser, isLoading ) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  }
+
 
   if (!access_token) {
     return (
@@ -101,6 +92,15 @@ export default function MessagesScreen({ navigation, route }) {
     )
   }
 
+  if (loadingUser, isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color={"#EF551D"} />
+      </View>
+    )
+  }
+
+
   return (
 
     <TalkRn.Session appId="tUXyvBIY" me={me}>
@@ -108,7 +108,7 @@ export default function MessagesScreen({ navigation, route }) {
         me={me}
         onSelectConversation={(conversation) => {
           const user = conversation.others[0];
-          console.log("user :", user);
+
           const obj = {
             id: user.id,
             name: user.name || user.username,

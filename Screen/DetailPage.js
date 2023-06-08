@@ -199,7 +199,7 @@ export default function DetailPage({ route }) {
   useEffect(() => {
     refetch()
   }, [dataComment, dataDelComment])
-  
+
 
   const [currentPosition, setCurrentPosition] = useState(0)
 
@@ -250,10 +250,10 @@ export default function DetailPage({ route }) {
   // Function to generate SVG for a given name
   function generateNameSVG(name) {
     // Extract the first letter of the name
-    const firstLetter = name.charAt(0).toUpperCase() 
+    const firstLetter = name.charAt(0).toUpperCase()
     let secondLetter = ""
     if (name.split(' ')[1]) {
-       secondLetter = name.split(' ')[1].charAt(0).toUpperCase() 
+      secondLetter = name.split(' ')[1].charAt(0).toUpperCase()
     }
 
     // Generate a random color for the circle background
@@ -308,17 +308,17 @@ export default function DetailPage({ route }) {
               play={false}
               videoId={videoUrlValue(detailvalue.findRecipe.videoUrl)}
             /> */}
-             <Image
-                style={{width: 400, height: 400}}
-                source={{
-                  uri: detailvalue?.findRecipe?.image,
-                }}
-              />
-            </View>
-          
-    
-          
-         
+            <Image
+              style={{ width: 400, height: 400 }}
+              source={{
+                uri: detailvalue?.findRecipe?.image,
+              }}
+            />
+          </View>
+
+
+
+
           <View style={{ marginLeft: 20, margin: 14, flex: 1, flexDirection: 'row', justifyContent: 'space-between' }}>
             <View style={{ flex: 1 }}>
               <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold", color: '#5B5B5B', textTransform: 'capitalize' }} >{detailvalue.findRecipe.title}</Text>
@@ -394,11 +394,11 @@ export default function DetailPage({ route }) {
 
           </View>
           <Pressable style={styles.chatUser} onPress={() => {
-              // console.log(detailvalue.findRecipe.UserId);
-              navigation.navigate("Chat", { id: detailvalue?.findRecipe?.UserId, name: detailvalue?.findRecipe?.User.username });
-            }}>
-               <Text style={styles.text1}> Tanya Chef</Text>
-            </Pressable>
+            // console.log(detailvalue.findRecipe.UserId);
+            navigation.navigate("Chat", { id: detailvalue?.findRecipe?.UserId, name: detailvalue?.findRecipe?.User.username });
+          }}>
+            <Text style={styles.text1}> Tanya Chef</Text>
+          </Pressable>
           <View style={styles.reactionContainer}>
             <Text style={{ textAlign: 'left', fontSize: 20, fontWeight: "bold" }} >Komentar</Text>
 
@@ -418,23 +418,23 @@ export default function DetailPage({ route }) {
                     </View>
                     {dataUser?.getUser?.id === el?.User?.id ? <TouchableOpacity style={{ justifyContent: 'center', alignItems: 'stretch' }} onPress={() => {
                       deleteCommentHandle({
-                          variables: {
-                            "commentId": el.id,
-                          }
-                         })  
+                        variables: {
+                          "commentId": el.id,
+                        }
+                      })
                     }}>
-                      <FontAwesomeIcon icon={faTrashCan} color="#EF551D" size={15}> 
+                      <FontAwesomeIcon icon={faTrashCan} color="#EF551D" size={15}>
                       </FontAwesomeIcon>
-                
+
                     </TouchableOpacity> : <View></View>}
-                   
+
                   </View>
                 </View>
               )
             })}
             <Image style={{ width: "100%" }} source={require('../assets/vectorline.png')}></Image>
-            <View style={{ flexDirection: 'row', gap: 7 }} >
-              <TextInput style={styles.input} placeholder="keren" value={comment} onChangeText={(e) => {
+            <View style={{ flexDirection: 'row', gap: 7, paddingTop: 10 }} >
+              <TextInput style={styles.input} placeholder="Tulis Tanggapanmu" value={comment} onChangeText={(e) => {
                 setComment(e)
               }} />
               <TouchableOpacity style={styles.submitReaction} onPress={() => {
@@ -446,6 +446,7 @@ export default function DetailPage({ route }) {
                   }
                 }
                 )
+                setComment('')
               }}>
                 <Text style={styles.text1}>Submit</Text>
               </TouchableOpacity>
@@ -458,7 +459,7 @@ export default function DetailPage({ route }) {
   } else {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EF551D"} />
       </View>
     )
   }
@@ -476,7 +477,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     width: "70%",
     height: 40,
-    backgroundColor: "#EDEDED",
+    backgroundColor: "white",
   },
   hr: {
     borderWidth: 10,
@@ -562,14 +563,14 @@ const styles = StyleSheet.create({
   text1: {
     color: "white",
     fontSize: 15,
-    textAlign : 'center'
+    textAlign: 'center'
   },
-  chatUser : {
+  chatUser: {
     alignSelf: 'center',
     paddingVertical: 12,
     paddingHorizontal: 25,
-    marginTop : 20 ,
-    width : "70%",
+    marginTop: 20,
+    width: "70%",
     borderRadius: 4,
     elevation: 10,
     height: 50,

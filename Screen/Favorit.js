@@ -134,7 +134,7 @@ export default function Favorit() {
     if (loading) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" />
+                <ActivityIndicator size="large" color={"#EF551D"} />
             </View>
         )
     }
@@ -149,11 +149,11 @@ export default function Favorit() {
         } else {
             return (
                 <>
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                    <View style={{ flex: 1, padding: 10, }}>
                         {data?.findFavorite ? <FlatList data={data.findFavorite} numColumns={2}
                             renderItem={({ item }) => {
                                 return (
-                                    <View style={{ flex: 1 }} key={item.Recipe.id}>
+                                    <View style={{ width: "50%" }} key={item.Recipe.id}>
                                         <Pressable style={{ ...styles.container }} onPress={() => navigation.navigate('Detail', { id: item.Recipe.id })} >
 
                                             <Image style={styles.photo} source={{ uri: item.Recipe.image }} />
@@ -174,7 +174,29 @@ export default function Favorit() {
                                 )
                             }}
                         /> : <></>}
-                        
+                        {/* {data?.findFavorite ? data.findFavorite.map(item => {
+                            return (
+                                <View style={{ grid: 1,  }} key={item.Recipe.id}>
+                                    <Pressable style={{ ...styles.container }} onPress={() => navigation.navigate('Detail', { id: item.Recipe.id })} >
+
+                                        <Image style={styles.photo} source={{ uri: item.Recipe.image }} />
+                                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={styles.title}>{item.Recipe.title}</Text>
+                                        </View>
+
+                                    </Pressable>
+                                    <Pressable style={{ zIndex: 1, position: 'absolute', right: 5, padding: 10, top: 17 }} onPress={() => {
+                                        const result = data.findFavorite.find(({ id }) => id == item.id)
+                                        if (result) {
+                                            createTwoButtonAlert(result.id)
+                                        }
+                                    }}>
+                                        {favorite(item.id)}
+                                    </Pressable>
+                                </View>
+                            )
+                        }) : <></>} */}
+
                     </View>
                 </>
             )

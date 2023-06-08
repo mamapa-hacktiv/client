@@ -66,10 +66,10 @@ export default function FormAdd({ route }) {
 
   useEffect(() => {
     refetchRecipe()
-    if (route?.params?.recipeId ) {
+    if (route?.params?.recipeId) {
       setForm({
         "title": dataRecipe ? dataRecipe.findRecipe?.title : "",
-        "image":  [],
+        "image": [],
         "description": dataRecipe ? dataRecipe.findRecipe?.description : "",
         "videoUrl": dataRecipe ? dataRecipe.findRecipe?.videoUrl : "",
         "origin": dataRecipe ? dataRecipe.findRecipe?.origin : "",
@@ -209,7 +209,7 @@ export default function FormAdd({ route }) {
   if (loadingRecipe) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EF551D"} />
       </View>
     )
   }
@@ -237,7 +237,7 @@ export default function FormAdd({ route }) {
         source={require('../assets/vectorOren.png')}
         style={{ ...styles.imageBackground, }}
       >
-        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
+        <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF", marginBottom: 20 }}>
           <View style={{ paddingTop: 20 }}>
             <TouchableOpacity onPress={pickImage}>
               {image ?
@@ -264,13 +264,13 @@ export default function FormAdd({ route }) {
               }
             </TouchableOpacity>
           </View>
-          <TextInput style={styles.input} placeholder="Name Recipes" onChangeText={(e) => onchange(e, 'title')} value={form.title} />
+          <TextInput style={styles.input} placeholder="Nama Resep, contoh: Nasi Goreng" onChangeText={(e) => onchange(e, 'title')} value={form.title} />
           <TextInput style={styles.input} multiline={true} placeholder="Cerita di balik masakan ini, Apa atau siapa yang menginspirasimu? Apa yang membuatnya istimewa? Bagaimana caramu menikmatinya" onChangeText={(e) => onchange(e, 'description')} value={form.description} />
-          <TextInput style={styles.input} placeholder="Daerah asal" onChangeText={(e) => onchange(e, 'origin')} value={form.origin} />
-          <TextInput style={styles.input} placeholder="Porsi" onChangeText={(e) => onchange(e, 'portion')} value={form.portion + ""} />
-          <TextInput style={styles.input} placeholder="Lama memasak" onChangeText={(e) => onchange(e, 'cookingTime')} value={form.cookingTime} />
-          <TextInput style={styles.input} placeholder="Video URL" onChangeText={(e) => onchange(e, 'videoUrl')} value={form.videoUrl} />
-          <Pressable style={{ ...styles.buttonn, }} onPress={() => {
+          <TextInput style={styles.input} placeholder="Daerah asal, contoh: Boyolali" onChangeText={(e) => onchange(e, 'origin')} value={form.origin} />
+          <TextInput style={styles.input} placeholder="Porsi, contoh: 2" onChangeText={(e) => onchange(e, 'portion')} value={form.portion + ""} />
+          <TextInput style={styles.input} placeholder="Lama memasak, contoh: 30 menit" onChangeText={(e) => onchange(e, 'cookingTime')} value={form.cookingTime} />
+          {/* <TextInput style={styles.input} placeholder="Video URL" onChangeText={(e) => onchange(e, 'videoUrl')} value={form.videoUrl} /> */}
+          <Pressable style={{ ...styles.buttonn, marginTop: 5 }} onPress={() => {
             navigation.navigate('Tambahkan Bahan dan Langkah', { recipeId: route?.params?.recipeId })
             recipeForm({ ...recipeForm(), ...form })
           }}>

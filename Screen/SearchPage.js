@@ -51,7 +51,7 @@ export default function SearchPage() {
   if (loading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EF551D"} />
       </View>
     )
   }
@@ -66,14 +66,15 @@ export default function SearchPage() {
               </TouchableOpacity>
 
             </View>
-            <View style={{ flex: 3, justifyContent: 'center' }}>
-              <View style={{ backgroundColor: '#EDEDED', height: 40, width: 270, borderRadius: 10, elevation: 4, justifyContent: 'center' }}>
+            <View style={{ flex: 3, justifyContent: 'center', }}>
+              <View style={{ backgroundColor: "white", height: 40, width: 270, borderRadius: 10, elevation: 4, justifyContent: 'center' }}>
                 <TextInput
                   style={{ left: 15, }}
                   placeholder="Nama Resep"
                   keyboardType='default'
                   onChangeText={(e) => { setSearch(e) }}
                   value={search}
+
                 />
               </View>
             </View>

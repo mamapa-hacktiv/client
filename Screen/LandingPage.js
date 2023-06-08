@@ -19,16 +19,16 @@ export default function LandingPage() {
 
                 </View>
                 <LinearGradient style={styles.overlay} colors={['transparent', 'rgba(0,0,0,1)']}>
-                    <View style={{width : "80%"}}>
-                    <View style={styles.textButton}>
-                        <Text style={styles.textHeaders}>Bingung pilih lauk makan? langsung aja buka,mam </Text>
-                        <Text style={styles.textTitle}>Disini sudah ada fitur pencarian makanan pake AI lohh</Text>
-                    </View>
-                    <View style={styles.button}>
-                        <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
-                            <Text style={styles.text}>Mulai</Text>
-                        </Pressable>
-                    </View>
+                    <View style={{ width: "80%" }}>
+                        <View style={styles.textButton}>
+                            <Text style={styles.textHeaders}>Bingung mau masak apa? langsung saja buka mamapa </Text>
+                            <Text style={styles.textTitle}>Disini sudah ada fitur pencarian resep makanan menggunakan AI</Text>
+                        </View>
+                        <View style={styles.button}>
+                            <Pressable style={styles.buttonn} onPress={() => navigation.navigate('Home')}>
+                                <Text style={styles.text}>Mulai</Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </LinearGradient>
             </View>
@@ -45,12 +45,12 @@ const styles = StyleSheet.create({
         width: "100%",
     },
     button: {
-       marginBottom : 10
+        marginBottom: 10
     },
     textButton: {
-        marginBottom : 50
+        marginBottom: 50
     },
-    buttonn : {
+    buttonn: {
         alignItems: 'center',
         justifyContent: 'center',
         paddingVertical: 12,
@@ -65,10 +65,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
-      },
+    },
     overlay: {
         flex: 1,
-        alignItems : 'center'
+        alignItems: 'center'
     },
     textHeaders: {
         fontSize: 35,

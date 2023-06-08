@@ -23,12 +23,12 @@ export default function ChatScreen(obj) {
   const photoUrl = obj.route.params.image;
 
   const { loading: loadingUser, error: errorUser, data: dataUser, refetch: refetchUser } = useQuery(GetUser);
-  console.log(dataUser, "<<ini data");
+  // console.log(dataUser, "<<ini data");
 
   const me = {
     id: dataUser?.getUser?.id,
     name: dataUser?.getUser?.username,
-    welcomeMessage: "Hi, Whats'up?",
+    welcomeMessage: "Ada yang bisa saya bantu?",
     role: "default",
   };
 
@@ -36,14 +36,14 @@ export default function ChatScreen(obj) {
     id,
     name,
     email,
-    welcomeMessage: "Hi, Whats'up?",
+    welcomeMessage: "Ada yang bisa saya bantu?",
     role: "default",
   };
 
-  console.log(me, "ini me", other, "ini dari other");
+  // console.log(me, "ini me", other, "ini dari other");
   // return null;
   if (loadingUser) {
-    return <ActivityIndicator />;
+    return <ActivityIndicator size="large" color={"#EF551D"} />;
   }
   if (!me.id || !other.id) {
     return null;

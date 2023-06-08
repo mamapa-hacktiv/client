@@ -129,7 +129,7 @@ export default function HomePage() {
         onPress: () => console.log('Cancel Pressed'),
         style: 'cancel',
       },
-      {text: 'LOGIN', onPress: () => navigation.navigate('Profiles')},
+      { text: 'LOGIN', onPress: () => navigation.navigate('Profiles') },
     ]);
   // useEffect(() => {
   //   AsyncStorage.getItem("access_token")
@@ -147,11 +147,11 @@ export default function HomePage() {
     var words = inputString.split(" ");
     var numWords = words.length;
 
-    if (numWords <= 19) {
+    if (numWords <= 15) {
       return inputString;
     }
 
-    var truncatedWords = words.slice(0, 19);
+    var truncatedWords = words.slice(0, 15);
     var truncatedString = truncatedWords.join(" ");
     return truncatedString + " ...";
   }
@@ -203,7 +203,7 @@ export default function HomePage() {
   if (loading || loadingFavorite) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
+        <ActivityIndicator size="large" color={"#EF551D"} />
       </View>
     )
   }
@@ -333,7 +333,7 @@ export default function HomePage() {
               </View>
             </>
             : <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <ActivityIndicator size="large" />
+              <ActivityIndicator size="large" color={"#EF551D"} />
             </View>}
       </ScrollView>
     </SafeAreaView>
@@ -384,7 +384,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     paddingVertical: 14,
-    paddingHorizontal: 40,
+    paddingHorizontal: 30,
     borderRadius: 4,
     elevation: 3,
     backgroundColor: "#F4F1F1",
@@ -419,7 +419,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     fontWeight: "light",
     letterSpacing: 0.25,
-    color: "#98A8BA",
+    color: "gray",
   },
   textTime: {
     fontSize: 16,

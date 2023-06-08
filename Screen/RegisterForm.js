@@ -4,6 +4,7 @@ import { useNavigation } from '@react-navigation/core';
 import { LinearGradient } from 'expo-linear-gradient';
 import { TextInput } from 'react-native-paper';
 import { useMutation, gql, useReactiveVar } from '@apollo/client';
+import { Alert } from 'react-native';
 
 const registerUpload = gql`
 mutation Register($newUser: newUser) {
@@ -44,7 +45,8 @@ export default function RegisterForm() {
                     newUser: registerForm
                 }
             });
-            navigation.navigate('Profiles')
+            createTwoButtonAlert()
+
             setRegisterForm({
                 "username": "",
                 "phoneNumber": "",
@@ -55,6 +57,11 @@ export default function RegisterForm() {
             console.log(error.errors, "<---------");
         }
     };
+
+    const createTwoButtonAlert = () =>
+        Alert.alert('Anda Berhasil Terdaftar', 'Silahkan login untuk melanjutkan', [
+            { text: 'LOGIN', onPress: () => navigation.navigate('Profiles') },
+        ]);
 
     const navigation = useNavigation();
     return (
@@ -104,7 +111,11 @@ export default function RegisterForm() {
                         <Pressable style={styles.buttonn} onPress={onClick}>
                             <Text style={styles.text}>Submit</Text>
                         </Pressable>
-                        <Pressable onPress={() => navigation.navigate('Profiles')} style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 5 }}>
+                        <Pressable onPress={() => {
+
+                            navigation.navigate('Profiles')
+                        }}
+                            style={{ justifyContent: 'center', alignItems: 'center', paddingTop: 5 }}>
                             <Text style={styles.text1}>Already have account? click Here</Text>
                         </Pressable>
 

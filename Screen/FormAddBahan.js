@@ -94,9 +94,9 @@ export default function FormAddBahan({ route }) {
         return el
     }) : [{ "name": "" }])
     const [steps, setSteps] = useState(dataRecipe ? dataRecipe.findRecipe?.Steps.map(el => {
-          delete el.__typename
-          return el
-        }) : [
+        delete el.__typename
+        return el
+    }) : [
         {
             "image": '',
             "instruction": ""
@@ -123,8 +123,8 @@ export default function FormAddBahan({ route }) {
                 console.log(recipeForm(), 'hasil edit');
                 await uploadEditForm({
                     variables: {
-                    "newRecipe": recipeForm(), 
-                    "recipeId": +route?.params?.recipeId
+                        "newRecipe": recipeForm(),
+                        "recipeId": +route?.params?.recipeId
                     }
                 })
             } else {
@@ -203,13 +203,13 @@ export default function FormAddBahan({ route }) {
     // if (loading) return <ActivityIndicator size="large" />
 
 
-  if (loadingRecipe || loadingEdit || loading ) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    )
-  }
+    if (loadingRecipe || loadingEdit || loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color={"#EF551D"} />
+            </View>
+        )
+    }
 
 
     return (
@@ -219,7 +219,7 @@ export default function FormAddBahan({ route }) {
                 style={styles.imageBackground}
             >
 
-                <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF" }}>
+                <View style={{ flex: 1, alignItems: 'center', backgroundColor: "#FFFFF", marginBottom: 20 }}>
                     <Text style={styles.textHeaders}>Bahan - Bahan</Text>
                     {renderedIngredients}
                     <TouchableOpacity onPress={() => {

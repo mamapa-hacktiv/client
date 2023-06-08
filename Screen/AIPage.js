@@ -40,7 +40,7 @@ export default function AIPage() {
     if (bot) {
       return <Text style={styles.text1}>{bot}</Text>
     } else {
-      return <ActivityIndicator size="large" color="white" />
+      return <ActivityIndicator size="small" color="white" />
     }
   }
 
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   button1: {
     marginTop: 20,
-    marginBottom: 10,
+    marginBottom: 50,
     paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 10,
